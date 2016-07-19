@@ -35,34 +35,45 @@ router.get('/', auth.optional, function(req, res, next) {
     query.tagList = {"$in" : [req.query.tag]};
   }
 
-  Promise.resolve(req.query.author ? User.findOne({username: req.query.author}) : null)
-    .then(function(author){
-      if(author){
-        query.author = author._id;
-      }
+  Promise.all([
+    req.query.author ? User.findOne({username: req.query.author}) : null,
+    req.query.favorited ? User.findOne({username: req.query.favorited}) : null
+  ]).then(function(results){
+    var author = results[0];
+    var favoriter = results[1];
 
-      return Promise.all([
-        Article.find(query)
-          .limit(limit)
-          .skip(offset)
-          .sort({createdAt: 'desc'})
-          .populate('author')
-          .exec(),
-        Article.count(query).exec(),
-        req.payload ? User.findById(req.payload.id) : null,
-      ]).then(function(results){
-        var articles = results[0];
-        var articlesCount = results[1];
-        var user = results[2];
+    if(author){
+      query.author = author._id;
+    }
 
-        return res.json({
-          articles: articles.map(function(article){
-            return article.toJSONFor(user);
-          }),
-          articlesCount: articlesCount
-        });
+    if(favoriter){
+      query._id = {$in: favoriter.favorites};
+    } else if(req.query.favorited){
+      query._id = {$in: []};
+    }
+
+    return Promise.all([
+      Article.find(query)
+        .limit(limit)
+        .skip(offset)
+        .sort({createdAt: 'desc'})
+        .populate('author')
+        .exec(),
+      Article.count(query).exec(),
+      req.payload ? User.findById(req.payload.id) : null,
+    ]).then(function(results){
+      var articles = results[0];
+      var articlesCount = results[1];
+      var user = results[2];
+
+      return res.json({
+        articles: articles.map(function(article){
+          return article.toJSONFor(user);
+        }),
+        articlesCount: articlesCount
       });
-    }).catch(next);
+    });
+  }).catch(next);
 });
 
 router.post('/', auth.required, function(req, res, next) {
@@ -126,6 +137,36 @@ router.delete('/:article', auth.required, function(req, res, next) {
       return res.sendStatus(403);
     }
   });
+});
+
+// Favorite an article
+router.post('/:article/favorite', auth.required, function(req, res, next) {
+  var articleId = req.article._id;
+
+  User.findById(req.payload.id).then(function(user){
+    if (!user) { return res.sendStatus(401); }
+
+    return user.favorite(articleId).then(function(){
+      return req.article.updateFavoriteCount().then(function(article){
+        return res.json({article: article.toJSONFor(user)});
+      });
+    });
+  }).catch(next);
+});
+
+// Unfavorite an article
+router.delete('/:article/favorite', auth.required, function(req, res, next) {
+  var articleId = req.article._id;
+
+  User.findById(req.payload.id).then(function (user){
+    if (!user) { return res.sendStatus(401); }
+
+    return user.unfavorite(articleId).then(function(){
+      return req.article.updateFavoriteCount().then(function(article){
+        return res.json({article: article.toJSONFor(user)});
+      });
+    });
+  }).catch(next);
 });
 
 module.exports = router;
