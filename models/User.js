@@ -56,4 +56,23 @@ UserSchema.methods.toProfileJSONFor = function(user){
   };
 };
 
+UserSchema.methods.favorite = function(id){
+  if(this.favorites.indexOf(id) === -1){
+    this.favorites.push(id);
+  }
+
+  return this.save();
+};
+
+UserSchema.methods.unfavorite = function(id){
+  this.favorites.remove(id);
+  return this.save();
+};
+
+UserSchema.methods.isFavorite = function(id){
+  return this.favorites.some(function(favoriteId){
+    return favoriteId.toString() === id.toString();
+  });
+};
+
 mongoose.model('User', UserSchema);
