@@ -65,8 +65,8 @@ router.get('/', auth.optional, function(req, res, next) {
 
     return Promise.all([
       Article.find(query)
-        .limit(limit)
-        .skip(offset)
+        .limit(Number(limit))
+        .skip(Number(offset))
         .sort({createdAt: 'desc'})
         .populate('author')
         .exec(),
@@ -104,8 +104,8 @@ router.get('/feed', auth.required, function(req, res, next) {
 
     Promise.all([
       Article.find({ author: {$in: user.following}})
-        .limit(limit)
-        .skip(offset)
+        .limit(Number(limit))
+        .skip(Number(offset))
         .populate('author')
         .exec(),
       Article.count({ author: {$in: user.following}})
