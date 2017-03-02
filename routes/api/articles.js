@@ -152,38 +152,42 @@ router.get('/:article', auth.optional, function(req, res, next) {
 
 // update article
 router.put('/:article', auth.required, function(req, res, next) {
-  if(req.article._id.toString() === req.payload.id.toString()){
-    if(typeof req.body.article.title !== 'undefined'){
-      req.article.title = req.body.article.title;
-    }
+  User.findById(req.payload.id).then(function(user){
+    if(req.article.author._id.toString() === req.payload.id.toString()){
+      if(typeof req.body.article.title !== 'undefined'){
+        req.article.title = req.body.article.title;
+      }
 
-    if(typeof req.body.article.description !== 'undefined'){
-      req.article.description = req.body.article.description;
-    }
+      if(typeof req.body.article.description !== 'undefined'){
+        req.article.description = req.body.article.description;
+      }
 
-    if(typeof req.body.article.body !== 'undefined'){
-      req.article.body = req.body.article.body;
-    }
+      if(typeof req.body.article.body !== 'undefined'){
+        req.article.body = req.body.article.body;
+      }
 
-    req.article.save().then(function(article){
-      return res.json({article: article.toJSONFor(user)});
-    }).catch(next);
-  } else {
-    return res.send(403);
-  }
+      req.article.save().then(function(article){
+        return res.json({article: article.toJSONFor(user)});
+      }).catch(next);
+    } else {
+      return res.sendStatus(403);
+    }
+  });
 });
 
 // delete article
 router.delete('/:article', auth.required, function(req, res, next) {
-  User.findById(req.payload.id).then(function(){
-    if(req.article.author.toString() === req.payload.id.toString()){
+  User.findById(req.payload.id).then(function(user){
+    if (!user) { return res.sendStatus(401); }
+
+    if(req.article.author._id.toString() === req.payload.id.toString()){
       return req.article.remove().then(function(){
         return res.sendStatus(204);
       });
     } else {
       return res.sendStatus(403);
     }
-  });
+  }).catch(next);
 });
 
 // Favorite an article
