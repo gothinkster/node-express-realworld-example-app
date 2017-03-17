@@ -6,6 +6,15 @@
 
 This repo is functionality complete — PR's and issues welcome!
 
+# Getting started
+
+To get the Node server running locally:
+
+- Clone this repo
+- `npm install` to install all req'd dependencies
+- `npm run dev` to start the local server
+
+
 # Code Overview
 
 ## Dependencies
