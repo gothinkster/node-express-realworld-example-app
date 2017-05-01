@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var auth = require('../auth');
 
-// Preload article objects on routes with ':username'
+// Preload user profile on routes with ':username'
 router.param('username', function(req, res, next, username){
   User.findOne({username: username}).then(function(user){
     if (!user) { return res.sendStatus(404); }
