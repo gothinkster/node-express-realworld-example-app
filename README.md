@@ -12,8 +12,10 @@ To get the Node server running locally:
 
 - Clone this repo
 - `npm install` to install all required dependencies
+- Install MongoDB Community Edition ([instructions](https://docs.mongodb.com/manual/installation/#tutorials)) and run it by executing `mongod`
 - `npm run dev` to start the local server
 
+Alternately, to quickly try out this repo in the cloud, navigate to this [glitch](http://glitch.com/edit/#!/realworld) and remix your own version by following the README instructions there.
 
 # Code Overview
 
