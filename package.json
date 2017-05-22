@@ -16,7 +16,6 @@
   "dependencies": {
     "body-parser": "1.15.0",
     "cors": "2.7.1",
-    "dotenv": "2.0.0",
     "ejs": "2.4.1",
     "errorhandler": "1.4.3",
     "express": "4.13.4",
