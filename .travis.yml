@@ -8,4 +8,3 @@ install: yarn
 
 before_script: yarn start
 script: yarn test
-after_script: yarn stop
