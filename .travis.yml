@@ -1,0 +1,11 @@
+language: node_js
+node_js: "8"
+
+sudo: required
+services: mongodb
+
+install: yarn
+
+before_script: yarn start
+script: yarn test
+after_script: yarn stop
