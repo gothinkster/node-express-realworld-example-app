@@ -4,9 +4,12 @@
   "description": "conduit on node",
   "main": "app.js",
   "scripts": {
+    "prestart": "docker run --name realworld-mongo -p 27017:27017 mongo & sleep 5",
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json"
+    "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
+    "stop": "lsof -ti :3000 | xargs kill",
+    "poststop": "docker stop realworld-mongo && docker rm realworld-mongo"
   },
   "repository": {
     "type": "git",
