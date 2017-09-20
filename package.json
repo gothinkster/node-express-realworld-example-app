@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
     "underscore": "1.8.3"
   },
   "devDependencies": {
+    "newman": "^3.8.2",
     "nodemon": "^1.11.0"
   }
 }
