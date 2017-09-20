@@ -6,5 +6,5 @@ services: mongodb
 
 install: yarn
 
-before_script: yarn start
+before_script: yarn start & sleep 5
 script: yarn test
