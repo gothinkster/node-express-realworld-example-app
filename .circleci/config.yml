@@ -1,0 +1,22 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/node:8.5.0
+      - image: circleci/mongo:3.4.9
+    steps:
+      - checkout
+      - run:
+          name: Start app and test
+          command: |
+            yarn
+            yarn run start & sleep 5
+            curl http://localhost:3000/api/tags
+            yarn run test
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
