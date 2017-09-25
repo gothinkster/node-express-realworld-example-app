@@ -8,6 +8,7 @@ dependencies:
 
 test:
   pre:
+    - service mongod status || service mongod start
     - yarn start & sleep 5
   override:
     - yarn test
