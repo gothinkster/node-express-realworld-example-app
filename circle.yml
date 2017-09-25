@@ -1,0 +1,13 @@
+machine:
+  node:
+    version: 8.5.0
+
+dependencies:
+  override:
+    - yarn
+
+test:
+  pre:
+    - yarn start & sleep 5
+  override:
+    - yarn test
