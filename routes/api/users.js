@@ -63,6 +63,19 @@ router.post('/users/login', function(req, res, next){
 router.post('/users', function(req, res, next){
   var user = new User();
 
+  if (!req.body.user.password && !req.body.user.username && !req.body.user.email) {
+    return res.status(422).json({errors: {password: "can't be blank", username: "can't be blank", email: "can't be blank"}});
+  }
+  if (!req.body.user.password && !req.body.user.username) {
+    return res.status(422).json({errors: {password: "can't be blank", username: "can't be blank"}});
+  }
+  if (!req.body.user.password && !req.body.user.email) {
+    return res.status(422).json({errors: {password: "can't be blank", email: "can't be blank"}});
+  }
+  if (!req.body.user.password) {
+    return res.status(422).json({errors: {password: "can't be blank"}});
+  }
+  
   user.username = req.body.user.username;
   user.email = req.body.user.email;
   user.setPassword(req.body.user.password);
