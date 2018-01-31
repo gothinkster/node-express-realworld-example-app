@@ -1,0 +1,14 @@
+{
+  "id": "4aa60b52-97fc-456d-4d4f-14a350e95dff",
+  "name": "Conduit API Tests - Environment",
+  "values": [{
+    "enabled": true,
+    "key": "apiUrl",
+    "value": "http://localhost:3000/api",
+    "type": "text"
+  }],
+  "timestamp": 1505871382668,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2017-09-20T01:36:34.835Z",
+  "_postman_exported_using": "Postman/5.2.0"
+}

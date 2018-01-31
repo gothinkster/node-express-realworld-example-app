@@ -1,0 +1,20 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.5.0
+      - image: circleci/mongo:3.4.9
+    steps:
+      - checkout
+      - run:
+          name: Start app and test
+          command: |
+            yarn
+            yarn run start & sleep 5
+            curl http://localhost:3000/api/tags
+            yarn run test
+      - run:
+          name: Trigger integration tests
+          command: curl -X POST "https://circleci.com/api/v1.1/project/github/anishkny/realworld-e2e-test?circle-token=$CIRCLE_CI_TOKEN"
+
