@@ -5,7 +5,6 @@ var http = require('http'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
     cors = require('cors'),
-    passport = require('passport'),
     errorhandler = require('errorhandler'),
     mongoose = require('mongoose');
 
