@@ -1,4 +1,8 @@
-# ![Node/Express/Mongoose Example App](project-logo.png)
+# This is cloned to demo downstream gitlab-ci integration with github
+
+---------------------------------------------------------------------
+
+## ![Node/Express/Mongoose Example App](project-logo.png)
 
 [![Build Status](https://travis-ci.org/anishkny/node-express-realworld-example-app.svg?branch=master)](https://travis-ci.org/anishkny/node-express-realworld-example-app)
 
