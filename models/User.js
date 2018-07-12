@@ -11,6 +11,10 @@ var UserSchema = new mongoose.Schema({
   image: String,
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  password: {
+    type: Boolean,
+    required: [true, "can't be blank"]
+  },
   hash: String,
   salt: String
 }, {timestamps: true});
@@ -25,6 +29,7 @@ UserSchema.methods.validPassword = function(password) {
 UserSchema.methods.setPassword = function(password){
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+  this.password = password !== '' ? true : null;
 };
 
 UserSchema.methods.generateJWT = function() {
