@@ -7,7 +7,8 @@ var http = require('http'),
     cors = require('cors'),
     passport = require('passport'),
     errorhandler = require('errorhandler'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    fs = require('fs');
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -30,8 +31,18 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
+const mongoOptions = {};
+if (parseInt(process.env.MONGODB_USESSL)) {
+  mongoOptions.ssl = true;
+  mongoOptions.user = process.env.MONGODB_USER;
+  mongoOptions.pass = process.env.MONGODB_PASS;
+  mongoOptions.sslKey = fs.readFileSync(process.env.MONGODB_SSLKEYFILE);
+  mongoOptions.sslCert = fs.readFileSync(process.env.MONGODB_SSLCERTFILE);
+  mongoOptions.sslCA = fs.readFileSync(process.env.MONGODB_SSLCAFILE);
+}
+
 if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI);
+  mongoose.connect(process.env.MONGODB_URI, mongoOptions);
 } else {
   mongoose.connect('mongodb://localhost/conduit');
   mongoose.set('debug', true);
