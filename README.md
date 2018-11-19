@@ -40,7 +40,7 @@ Alternately, to quickly try out this repo in the cloud, you can [![Remix on Glit
 
 ## Error Handling
 
-In `routes/api/index.js`, we define a error-handling middleware for handling Mongoose's `ValidationError`. This middleware will respond with a 422 status code and format the response to have [error messages the clients can understand](https://github.com/gothinkster/realworld/blob/master/API.md#errors-and-status-codes)
+In `routes/api/index.js`, we define a error-handling middleware for handling Mongoose's `ValidationError`. This middleware will respond with a 422 status code and format the response to have [error messages the clients can understand](https://github.com/gothinkster/realworld/blob/master/api/README.md#errors-and-status-codes)
 
 ## Authentication
 
