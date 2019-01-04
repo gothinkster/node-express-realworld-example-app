@@ -3,6 +3,8 @@ node_js:
   - "8"
 services:
   - mongodb
+cache: 
+  - npm
 install: 
   - yarn
 before_script:
