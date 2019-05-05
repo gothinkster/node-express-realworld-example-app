@@ -18,11 +18,11 @@ node {
   }
   
   stage('test') {
-      echo "test"
+      sh 'sleep 90'
   }
   
   stage('deploy') {
-      echo "deploy"
+      sh 'sleep 90'
   }
     
 }
