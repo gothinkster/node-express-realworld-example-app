@@ -10,6 +10,7 @@ var http = require('http'),
     mongoose = require('mongoose');
 
 var isProduction = process.env.NODE_ENV === 'production';
+var mongodbUri
 
 // Create global app object
 var app = express();
@@ -28,6 +29,10 @@ app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, s
 
 if (!isProduction) {
   app.use(errorhandler());
+  mongoose.set('debug', true);
+  mongodbUri = process.env.MONGODB_URI ? process.env.MONGODB_URI : "mongodb://localhost/conduit"
+} else {
+  mongodbUri = process.env.MONGODB_URI
 }
 
 // DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
@@ -36,12 +41,13 @@ mongoose.set('useCreateIndex', true);
 // DeprecationWarning: current URL string parser is deprecated.
 mongoose.set('useNewUrlParser', true);
 
-if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI);
-} else {
-  mongoose.connect('mongodb://localhost/conduit');
-  mongoose.set('debug', true);
-}
+// DeprecationWarning: Unhandled promise rejections are deprecated.
+// https://mongoosejs.com/docs/connections.html#connection-events
+mongoose.connect(mongodbUri)
+.catch((err) => {
+  console.log(err.stack);
+  process.exit(1);
+});
 
 require('./models/User');
 require('./models/Article');
