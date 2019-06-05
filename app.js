@@ -30,6 +30,12 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
+// DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
+mongoose.set('useCreateIndex', true);
+
+// DeprecationWarning: current URL string parser is deprecated.
+mongoose.set('useNewUrlParser', true);
+
 if(isProduction){
   mongoose.connect(process.env.MONGODB_URI);
 } else {
