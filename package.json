@@ -27,7 +27,7 @@
     "jsonwebtoken": "7.1.9",
     "method-override": "2.3.5",
     "methods": "1.1.2",
-    "mongoose": "4.4.10",
+    "mongoose": "5.7.5",
     "mongoose-unique-validator": "1.0.2",
     "morgan": "1.7.0",
     "passport": "0.3.2",
