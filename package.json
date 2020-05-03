@@ -37,6 +37,7 @@
     "underscore": "1.8.3"
   },
   "devDependencies": {
+    "mongodb": "^3.5.7",
     "newman": "^3.8.2",
     "nodemon": "^1.11.0"
   }

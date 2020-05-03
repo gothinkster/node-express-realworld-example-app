@@ -1,5 +1,6 @@
-FROM node:lts-alpine
+FROM node:latest
 WORKDIR /app
 COPY . /app/
-RUN yarn install
-CMD ["yarn", "serve"]
+RUN npm install
+EXPOSE 3000
+CMD ["npm", "start"]
