@@ -1,12 +1,7 @@
 const router = require('express').Router();
-const mongoose = require('mongoose');
-const Article = mongoose.model('Article');
+const tagsController = require('../../controllers/tags');
 
 // return a list of tags
-router.get('/', (req, res, next) => {
-  Article.find().distinct('tagList').then(tags => {
-    return res.json({tags: tags});
-  }).catch(next);
-});
+router.get('/', tagsController.getTagsController);
 
 module.exports = router;
