@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
 const auth = require('../auth');
+const profilesController = require('../../controllers/profiles');
 
 // Preload user profile on routes with ':username'
 router.param('username', (req, res, next, username) => {
@@ -14,40 +13,10 @@ router.param('username', (req, res, next, username) => {
   }).catch(next);
 });
 
-router.get('/:username', auth.optional, (req, res, next) =>{
-  if(req.payload){
-    User.findById(req.payload.id).then(user =>{
-      if(!user){ return res.json({profile: req.profile.toProfileJSONFor(false)}); }
+router.get('/:username', auth.optional, profilesController.getUsernameController);
 
-      return res.json({profile: req.profile.toProfileJSONFor(user)});
-    });
-  } else {
-    return res.json({profile: req.profile.toProfileJSONFor(false)});
-  }
-});
+router.post('/:username/follow', auth.required, profilesController.getUsernameFollowController);
 
-router.post('/:username/follow', auth.required, (req, res, next) =>{
-  var profileId = req.profile._id;
-
-  User.findById(req.payload.id).then(user =>{
-    if (!user) { return res.sendStatus(401); }
-
-    return user.follow(profileId).then(() => {
-      return res.json({profile: req.profile.toProfileJSONFor(user)});
-    });
-  }).catch(next);
-});
-
-router.delete('/:username/follow', auth.required, (req, res, next) =>{
-  var profileId = req.profile._id;
-
-  User.findById(req.payload.id).then(user =>{
-    if (!user) { return res.sendStatus(401); }
-
-    return user.unfollow(profileId).then(() => {
-      return res.json({profile: req.profile.toProfileJSONFor(user)});
-    });
-  }).catch(next);
-});
+router.delete('/:username/follow', auth.required, profilesController.deleteUsernameFollowController);
 
 module.exports = router;
