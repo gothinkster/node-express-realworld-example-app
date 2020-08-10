@@ -16,19 +16,16 @@ router.put('/user', auth.required, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
+    // allowed fields in request body (excluding password)
+    const fields = ['username', 'email', 'bio', 'image']
+    
     // only update fields that were actually passed...
-    if(typeof req.body.user.username !== 'undefined'){
-      user.username = req.body.user.username;
-    }
-    if(typeof req.body.user.email !== 'undefined'){
-      user.email = req.body.user.email;
-    }
-    if(typeof req.body.user.bio !== 'undefined'){
-      user.bio = req.body.user.bio;
-    }
-    if(typeof req.body.user.image !== 'undefined'){
-      user.image = req.body.user.image;
-    }
+    fields.forEach(prop => {
+      if (req.body.user[prop] !== undefined) {
+        user[prop] = req.body.user[prop]
+      }
+    })
+    
     if(typeof req.body.user.password !== 'undefined'){
       user.setPassword(req.body.user.password);
     }
