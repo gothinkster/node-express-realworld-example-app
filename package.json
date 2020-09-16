@@ -20,7 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "1.18.2",
-    "cors": "2.7.1",
+    "cors": "2.8.5",
     "ejs": "2.5.5",
     "errorhandler": "1.4.3",
     "express": "4.16.0",
