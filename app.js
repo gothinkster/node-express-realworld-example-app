@@ -8,6 +8,7 @@ var http = require('http'),
     passport = require('passport'),
     errorhandler = require('errorhandler'),
     mongoose = require('mongoose');
+   helmet =require('helmet');
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -15,7 +16,8 @@ var isProduction = process.env.NODE_ENV === 'production';
 var app = express();
 
 app.use(cors());
-
+//Protect routes
+app.use(helmet());
 // Normal express config defaults
 app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));

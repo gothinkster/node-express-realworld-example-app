@@ -17,7 +17,7 @@ To get the Node server running locally:
 - Install MongoDB Community Edition ([instructions](https://docs.mongodb.com/manual/installation/#tutorials)) and run it by executing `mongod`
 - `npm run dev` to start the local server
 
-Alternately, to quickly try out this repo in the cloud, you can [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/realworld)
+Alternately, to quickly try out this repo in the cloud with ease, you can head over to[![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/realworld)
 
 # Code Overview
 
@@ -30,6 +30,7 @@ Alternately, to quickly try out this repo in the cloud, you can [![Remix on Glit
 - [mongoose-unique-validator](https://github.com/blakehaswell/mongoose-unique-validator) - For handling unique validation errors in Mongoose. Mongoose only handles validation at the document level, so a unique index across a collection will throw an exception at the driver level. The `mongoose-unique-validator` plugin helps us by formatting the error like a normal mongoose `ValidationError`.
 - [passport](https://github.com/jaredhanson/passport) - For handling user authentication
 - [slug](https://github.com/dodo/node-slug) - For encoding titles into a URL-friendly format
+-[helmet](https://github.com/helmetjs/helmet) -Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
 
 ## Application Structure
 
