@@ -50,3 +50,4 @@ Requests are authenticated using the `Authorization` header with a valid JWT. We
 <br />
 
 [![Brought to you by Thinkster](https://raw.githubusercontent.com/gothinkster/realworld/master/media/end.png)](https://thinkster.io)
+RECORDAR UTILIZAR EL GIT
