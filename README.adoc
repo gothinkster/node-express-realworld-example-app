@@ -1,0 +1,20 @@
+# Node Express Mongoose Realworld Example App
+
+....
+cd react-redux-realworld-example-app
+npm install
+cd ..
+npm install
+....
+
+To run development server, start `mongod` on the standard port 27017 and run:
+
+....
+npm run dev
+....
+
+This automatically opens a browser at http://localhost:4101/
+
+The database name is `realworld_express`.
+
+TODO deployment.

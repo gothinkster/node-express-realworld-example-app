@@ -5,9 +5,11 @@
   "main": "app.js",
   "scripts": {
     "mongo:start": "docker run --name realworld-mongo -p 27017:27017 mongo & sleep 5",
-    "start": "node ./app.js",
-    "dev": "nodemon ./app.js",
+    "back": "nodemon ./app.js",
+    "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
+    "front": "cd react-redux-realworld-example-app && npm start",
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
+    "start": "node ./app.js",
     "stop": "lsof -ti :3000 | xargs kill",
     "mongo:stop": "docker stop realworld-mongo && docker rm realworld-mongo"
   },
@@ -18,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "1.15.0",
+    "concurrent": "^0.3.2",
     "cors": "2.7.1",
     "ejs": "2.4.1",
     "errorhandler": "1.4.3",
