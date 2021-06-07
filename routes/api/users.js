@@ -1,10 +1,14 @@
 var mongoose = require('mongoose');
 var router = require('express').Router();
 var passport = require('passport');
-var User = mongoose.model('User');
-var auth = require('../auth');
+var User = require('../../models/User');
+var auth = require('../../middleware/auth');
+const { check, validationResult } = require('express-validator/check');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('config');
 
-router.get('/user', auth.required, function(req, res, next){
+router.get('/user', auth, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
@@ -12,7 +16,7 @@ router.get('/user', auth.required, function(req, res, next){
   }).catch(next);
 });
 
-router.put('/user', auth.required, function(req, res, next){
+router.put('/user', auth, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
@@ -60,16 +64,66 @@ router.post('/users/login', function(req, res, next){
   })(req, res, next);
 });
 
-router.post('/users', function(req, res, next){
-  var user = new User();
+router.post('/users', [
+  check('username', 'Username is required').not().isEmpty(),
+  check('email', 'Email is required').isEmail(),
+  check(
+    'password', 
+    'Please enter a password with 6 or more characters'
+  ).isLength({ min: 6 })
+], async (req, res) => {
+  // Check if there is an error in the user's input
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
 
-  user.username = req.body.user.username;
-  user.email = req.body.user.email;
-  user.setPassword(req.body.user.password);
+  const { username, email, password } = req.body;
 
-  user.save().then(function(){
-    return res.json({user: user.toAuthJSON()});
-  }).catch(next);
+
+  try {
+    // See if user exists
+    let user = await User.findOne({ email });
+
+    if(user) {
+        return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+    }
+
+    user = new User({
+      username,
+      email,
+      password
+    });
+
+    // Encrypt password
+    const salt = await bcrypt.genSalt(10);
+
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    // After saving a user, you create a JWT which you can
+    // assign to that user
+    const payload = {
+      user: {
+        id: user.id
+      }
+    }
+
+    jwt.sign(
+      payload,
+      config.get('jwtSecret'),
+      { expiresIn: 360000 },
+      (err, token) => {
+        if(err) throw err;
+        res.json({ token })
+      }
+    );
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
 });
 
 module.exports = router;

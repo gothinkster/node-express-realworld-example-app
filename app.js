@@ -9,17 +9,23 @@ var http = require('http'),
     errorhandler = require('errorhandler'),
     mongoose = require('mongoose');
 
+const connectDB = require('./config/db');
+
 var isProduction = process.env.NODE_ENV === 'production';
 
 // Create global app object
 var app = express();
 
+// Connect Database
+connectDB();
+
+
 app.use(cors());
 
 // Normal express config defaults
 app.use(require('morgan')('dev'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json({ extended: false }));
+// app.use(bodyParser.json());
 
 app.use(require('method-override')());
 app.use(express.static(__dirname + '/public'));
@@ -30,12 +36,12 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
-if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI);
-} else {
-  mongoose.connect('mongodb://localhost/conduit');
-  mongoose.set('debug', true);
-}
+// if(isProduction){
+//   mongoose.connect(process.env.MONGODB_URI);
+// } else {
+//   mongoose.connect('mongodb+srv://123:123@cluster0.p0ucl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+//   mongoose.set('debug', true);
+// }
 
 require('./models/User');
 require('./models/Article');
