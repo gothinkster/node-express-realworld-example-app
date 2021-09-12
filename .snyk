@@ -1,0 +1,29 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.19.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:extend:20180424':
+    - request > extend:
+        patched: '2020-09-16T14:01:55.188Z'
+  SNYK-JS-LODASH-567746:
+    - request > form-data > async > lodash:
+        patched: '2020-09-16T14:01:55.188Z'
+  'npm:moment:20170905':
+    - jsonwebtoken > joi > moment:
+        patched: '2020-09-16T14:01:55.188Z'
+  'npm:stringstream:20180511':
+    - request > stringstream:
+        patched: '2020-09-16T14:01:55.188Z'
+  'npm:hoek:20180212':
+    - request > hawk > hoek:
+        patched: '2020-09-26T07:16:44.061Z'
+    - request > hawk > boom > hoek:
+        patched: '2020-09-26T07:16:44.061Z'
+    - request > hawk > sntp > hoek:
+        patched: '2020-09-26T07:16:44.061Z'
+    - request > hawk > cryptiles > boom > hoek:
+        patched: '2020-09-26T07:16:44.061Z'
+  'npm:tough-cookie:20170905':
+    - request > tough-cookie:
+        patched: '2020-09-26T07:16:44.061Z'

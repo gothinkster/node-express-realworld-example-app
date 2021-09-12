@@ -9,7 +9,9 @@
     "dev": "nodemon ./app.js",
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
     "stop": "lsof -ti :3000 | xargs kill",
-    "mongo:stop": "docker stop realworld-mongo && docker rm realworld-mongo"
+    "mongo:stop": "docker stop realworld-mongo && docker rm realworld-mongo",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -17,27 +19,29 @@
   },
   "license": "ISC",
   "dependencies": {
-    "body-parser": "1.15.0",
-    "cors": "2.7.1",
-    "ejs": "2.4.1",
+    "body-parser": "1.18.2",
+    "cors": "2.8.5",
+    "ejs": "2.5.5",
     "errorhandler": "1.4.3",
-    "express": "4.13.4",
-    "express-jwt": "3.3.0",
-    "express-session": "1.13.0",
-    "jsonwebtoken": "7.1.9",
-    "method-override": "2.3.5",
+    "express": "4.17.1",
+    "express-jwt": "6.0.0",
+    "express-session": "1.15.6",
+    "jsonwebtoken": "8.0.0",
+    "method-override": "2.3.10",
     "methods": "1.1.2",
-    "mongoose": "4.4.10",
+    "mongoose": "5.10.1",
     "mongoose-unique-validator": "1.0.2",
-    "morgan": "1.7.0",
+    "morgan": "1.9.1",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
-    "request": "2.69.0",
-    "slug": "0.9.1",
-    "underscore": "1.8.3"
+    "request": "2.88.0",
+    "slug": "0.9.2",
+    "underscore": "1.8.3",
+    "snyk": "^1.667.0"
   },
   "devDependencies": {
     "newman": "^3.8.2",
     "nodemon": "^1.11.0"
-  }
+  },
+  "snyk": true
 }
