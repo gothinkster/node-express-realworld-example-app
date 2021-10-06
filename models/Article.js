@@ -21,7 +21,7 @@ const ArticleSchema = new mongoose.Schema(
 
 ArticleSchema.plugin(uniqueValidator, { message: 'is already taken' });
 
-ArticleSchema.pre('validate', (next) => {
+ArticleSchema.pre('validate', function (next) {
   if (!this.slug) {
     this.slugify();
   }
@@ -29,14 +29,11 @@ ArticleSchema.pre('validate', (next) => {
   next();
 });
 
-ArticleSchema.methods.slugify = () => {
-  this.slug = `${slug(this.title)}-${(
-    (Math.random() * Math.pow(36, 6))
-    | 0
-  ).toString(36)}`;
+ArticleSchema.methods.slugify = function () {
+  this.slug = `${slug(this.title)}-${(Math.random() * Math.pow(36, 6) | 0).toString(36)}`;
 };
 
-ArticleSchema.methods.updateFavoriteCount = () => {
+ArticleSchema.methods.updateFavoriteCount = function () {
   const article = this;
 
   return User.count({ favorites: { $in: [article._id] } }).then((count) => {
@@ -46,17 +43,19 @@ ArticleSchema.methods.updateFavoriteCount = () => {
   });
 };
 
-ArticleSchema.methods.toJSONFor = (user) => ({
-  slug: this.slug,
-  title: this.title,
-  description: this.description,
-  body: this.body,
-  createdAt: this.createdAt,
-  updatedAt: this.updatedAt,
-  tagList: this.tagList,
-  favorited: user ? user.isFavorite(this._id) : false,
-  favoritesCount: this.favoritesCount,
-  author: this.author.toProfileJSONFor(user),
-});
+ArticleSchema.methods.toJSONFor = function (user) {
+  return {
+    slug: this.slug,
+    title: this.title,
+    description: this.description,
+    body: this.body,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+    tagList: this.tagList,
+    favorited: user ? user.isFavorite(this._id) : false,
+    favoritesCount: this.favoritesCount,
+    author: this.author.toProfileJSONFor(user),
+  };
+};
 
 mongoose.model('Article', ArticleSchema);
