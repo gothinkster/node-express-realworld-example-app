@@ -11,8 +11,8 @@ const CategorySchema = new mongoose.Schema(
       required: [true, 'is required.'],
     },
     description: String,
+    articles: [{ type: String }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    articles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
   },
   { timestamps: true },
 );
