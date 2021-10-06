@@ -3,12 +3,12 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const CategorySchema = new mongoose.Schema(
   {
-    name: {
+    categoryName: {
       type: String,
       trim: true,
       unique: true,
       uniqueCaseInsensitive: true,
-      required: [true, "can't be blank"],
+      required: [true, 'is required.'],
     },
     description: String,
     articles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
@@ -16,6 +16,6 @@ const CategorySchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-CategorySchema.plugin(uniqueValidator, { message: 'is already taken.' });
+CategorySchema.plugin(uniqueValidator, { message: 'already exists.' });
 
 mongoose.model('Category', CategorySchema);

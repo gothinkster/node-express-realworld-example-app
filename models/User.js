@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema(
     hash: String,
     salt: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
@@ -59,7 +59,7 @@ UserSchema.methods.generateJWT = function () {
       username: this.username,
       exp: parseInt(exp.getTime() / 1000, 10),
     },
-    secret
+    secret,
   );
 };
 
@@ -98,7 +98,7 @@ UserSchema.methods.unfavorite = function (id) {
 
 UserSchema.methods.isFavorite = function (id) {
   return this.favorites.some(
-    (favoriteId) => favoriteId.toString() === id.toString()
+    (favoriteId) => favoriteId.toString() === id.toString(),
   );
 };
 
@@ -117,7 +117,7 @@ UserSchema.methods.unfollow = function (id) {
 
 UserSchema.methods.isFollowing = function (id) {
   return this.following.some(
-    (followId) => followId.toString() === id.toString()
+    (followId) => followId.toString() === id.toString(),
   );
 };
 
