@@ -23,4 +23,11 @@ router.post('/', auth.required, (req, res, next) => {
     .catch(next);
 });
 
+// get all categories
+router.get('/', (req, res, next) => {
+  Category.find()
+    .then((categories) => res.json(categories))
+    .catch(next);
+});
+
 module.exports = router;
