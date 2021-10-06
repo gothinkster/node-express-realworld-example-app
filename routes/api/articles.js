@@ -325,7 +325,7 @@ router.delete(
     } else {
       res.sendStatus(403);
     }
-  },
+  }
 );
 
 module.exports = router;

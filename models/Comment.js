@@ -1,22 +1,21 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var CommentSchema = new mongoose.Schema(
+const CommentSchema = new mongoose.Schema(
   {
     body: String,
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     article: { type: mongoose.Schema.Types.ObjectId, ref: 'Article' },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // Requires population of author
-CommentSchema.methods.toJSONFor = function (user) {
-  return {
-    id: this._id,
-    body: this.body,
-    createdAt: this.createdAt,
-    author: this.author.toProfileJSONFor(user),
-  };
-};
+CommentSchema.methods.toJSONFor = (user) => ({
+  // eslint-disable-next-line no-underscore-dangle
+  id: this._id,
+  body: this.body,
+  createdAt: this.createdAt,
+  author: this.author.toProfileJSONFor(user),
+});
 
 mongoose.model('Comment', CommentSchema);

@@ -30,7 +30,7 @@ app.use(
     cookie: { maxAge: 60000 },
     resave: false,
     saveUninitialized: false,
-  }),
+  })
 );
 
 if (!isProduction) {
