@@ -6,7 +6,9 @@ const User = mongoose.model('User');
 
 const ArticleSchema = new mongoose.Schema(
   {
-    slug: { type: String, lowercase: true, unique: true },
+    slug: {
+      type: String, lowercase: true, unique: true, trim: true,
+    },
     title: String,
     description: String,
     body: String,
@@ -14,7 +16,7 @@ const ArticleSchema = new mongoose.Schema(
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
     tagList: [{ type: String }],
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
+    categories: [{ type: String, trim: true }],
   },
   { timestamps: true },
 );
