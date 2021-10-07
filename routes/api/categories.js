@@ -59,10 +59,10 @@ router.get('/', auth.optional, (req, res, next) => {
           .exec(),
         Category.count(query).exec(),
         req.payload ? User.findById(req.payload.id) : null,
-      ]).then((results) => {
-        const categories = results[0];
-        const categoriesCount = results[1];
-        const user = results[2];
+      ]).then((result) => {
+        const categories = result[0];
+        const categoriesCount = result[1];
+        const user = result[2];
 
         return res.json({
           categories: categories.map((category) => category.toJSONFor(user)),

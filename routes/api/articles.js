@@ -84,10 +84,10 @@ router.get('/', auth.optional, (req, res, next) => {
           .exec(),
         Article.count(query).exec(),
         req.payload ? User.findById(req.payload.id) : null,
-      ]).then((results) => {
-        const articles = results[0];
-        const articlesCount = results[1];
-        const user = results[2];
+      ]).then((result) => {
+        const articles = result[0];
+        const articlesCount = result[1];
+        const user = result[2];
 
         return res.json({
           articles: articles.map((article) => article.toJSONFor(user)),
@@ -115,7 +115,7 @@ router.get('/feed', auth.required, (req, res, next) => {
       return res.sendStatus(401);
     }
 
-    Promise.all([
+    return Promise.all([
       Article.find({ author: { $in: user.following } })
         .limit(Number(limit))
         .skip(Number(offset))
@@ -186,13 +186,12 @@ router.put('/:article', auth.required, (req, res, next) => {
         req.article.tagList = req.body.article.tagList;
       }
 
-      req.article
+      return req.article
         .save()
         .then((article) => res.json({ article: article.toJSONFor(user) }))
         .catch(next);
-    } else {
-      return res.sendStatus(403);
     }
+    return res.sendStatus(403);
   });
 });
 
@@ -222,7 +221,9 @@ router.post('/:article/favorite', auth.required, (req, res, next) => {
         return res.sendStatus(401);
       }
 
-      return user.favorite(articleId).then(() => req.article.updateFavoriteCount().then((article) => res.json({ article: article.toJSONFor(user) })));
+      return user.favorite(articleId)
+        .then(() => req.article.updateFavoriteCount()
+          .then((article) => res.json({ article: article.toJSONFor(user) })));
     })
     .catch(next);
 });
@@ -237,7 +238,9 @@ router.delete('/:article/favorite', auth.required, (req, res, next) => {
         return res.sendStatus(401);
       }
 
-      return user.unfavorite(articleId).then(() => req.article.updateFavoriteCount().then((article) => res.json({ article: article.toJSONFor(user) })));
+      return user.unfavorite(articleId)
+        .then(() => req.article.updateFavoriteCount()
+          .then((article) => res.json({ article: article.toJSONFor(user) })));
     })
     .catch(next);
 });
@@ -258,7 +261,7 @@ router.get('/:article/comments', auth.optional, (req, res, next) => {
         },
       })
       .execPopulate()
-      .then((article) => res.json({
+      .then(() => res.json({
         comments: req.article.comments.map((comment) => comment.toJSONFor(user)),
       })))
     .catch(next);
@@ -279,7 +282,7 @@ router.post('/:article/comments', auth.required, (req, res, next) => {
       return comment.save().then(() => {
         req.article.comments.push(comment);
 
-        return req.article.save().then((article) => {
+        return req.article.save().then(() => {
           res.json({ comment: comment.toJSONFor(user) });
         });
       });
@@ -290,7 +293,7 @@ router.post('/:article/comments', auth.required, (req, res, next) => {
 router.delete(
   '/:article/comments/:comment',
   auth.required,
-  (req, res, next) => {
+  (req, res) => {
     if (req.comment.author.toString() === req.payload.id.toString()) {
       req.article.comments.remove(req.comment._id);
       req.article
@@ -313,9 +316,10 @@ router.post('/:article/categories', auth.required, (req, res, next) => {
       if (req.article.author._id.toString() !== req.payload.id.toString()) res.sendStatus(403);
 
       return Category.find({ name: { $in: req.body.article.categories } }, { _id: 1 })
-        .then((categories) => {
-          for (let i = 0; i < categories.length; i += 1) {
-            categories[i] = categories[i]._id;
+        .then((categoryObjects) => {
+          const categories = [];
+          for (let i = 0; i < categoryObjects.length; i += 1) {
+            categories.push(categoryObjects[i]._id);
           }
 
           Category.collection.updateMany(
