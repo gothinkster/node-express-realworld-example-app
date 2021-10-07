@@ -18,7 +18,7 @@ const ArticleSchema = new mongoose.Schema(
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
   },
-  { timestamps: true },
+  { timestamps: true, usePushEach: true },
 );
 
 ArticleSchema.plugin(uniqueValidator, { message: 'is already taken' });
@@ -59,14 +59,6 @@ ArticleSchema.methods.toJSONFor = function (user) {
     favoritesCount: this.favoritesCount,
     author: this.author.toProfileJSONFor(user),
   };
-};
-
-ArticleSchema.methods.addCategory = function (categoryID) {
-  if (this.categories.indexOf(categoryID) === -1) {
-    this.categories.push(categoryID);
-  }
-
-  return this.save();
 };
 
 mongoose.model('Article', ArticleSchema);

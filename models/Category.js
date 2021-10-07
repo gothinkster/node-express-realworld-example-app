@@ -30,12 +30,4 @@ CategorySchema.methods.toJSONFor = function (user) {
   };
 };
 
-CategorySchema.methods.addArticle = function (articleID) {
-  if (this.articles.indexOf(articleID) === -1) {
-    this.articles.push(articleID);
-  }
-
-  return this.save();
-};
-
 mongoose.model('Category', CategorySchema);

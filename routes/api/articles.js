@@ -2,6 +2,7 @@ const router = require('express').Router();
 const mongoose = require('mongoose');
 
 const Article = mongoose.model('Article');
+const Category = mongoose.model('Category');
 const Comment = mongoose.model('Comment');
 const User = mongoose.model('User');
 const auth = require('../auth');
@@ -302,5 +303,40 @@ router.delete(
     }
   },
 );
+
+// add categories
+router.post('/:article/categories', auth.required, (req, res, next) => {
+  User.findById(req.payload.id)
+    .then((user) => {
+      if (!user) return res.sendStatus(401);
+      if (req.article.author._id.toString() !== req.payload.id.toString()) res.sendStatus(403);
+
+      return Category.find({ name: { $in: req.body.article.categories } }, { _id: 1 })
+        .then((categories) => {
+          for (let i = 0; i < categories.length; i += 1) {
+            categories[i] = categories[i]._id;
+          }
+
+          Category.collection.updateMany(
+            { _id: { $in: categories } },
+            { $addToSet: { articles: req.article._id } },
+          ).then(() => Article.findByIdAndUpdate(
+            req.article._id,
+            {
+              $addToSet: {
+                categories: {
+                  $each: categories,
+                },
+              },
+            },
+          )
+            .then(() => res.json({ article: req.article.toJSONFor(user) }))
+            .catch(next))
+            .catch(next);
+        })
+        .catch(next);
+    })
+    .catch(next);
+});
 
 module.exports = router;
