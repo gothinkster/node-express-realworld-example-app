@@ -61,4 +61,12 @@ ArticleSchema.methods.toJSONFor = function (user) {
   };
 };
 
+ArticleSchema.methods.addCategory = function (categoryID) {
+  if (this.categories.indexOf(categoryID) === -1) {
+    this.categories.push(categoryID);
+  }
+
+  return this.save();
+};
+
 mongoose.model('Article', ArticleSchema);
