@@ -16,7 +16,7 @@ const ArticleSchema = new mongoose.Schema(
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
     tagList: [{ type: String }],
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    categories: [{ type: String, trim: true }],
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
   },
   { timestamps: true },
 );

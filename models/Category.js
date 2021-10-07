@@ -11,8 +11,8 @@ const CategorySchema = new mongoose.Schema(
       required: [true, 'is required.'],
     },
     description: String,
-    articles: [{ type: String, trim: true }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    articles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
   },
   { timestamps: true },
 );
@@ -21,13 +21,21 @@ CategorySchema.plugin(uniqueValidator, { message: 'already exists.' });
 
 CategorySchema.methods.toJSONFor = function (user) {
   return {
-    categoryName: this.categoryName,
+    name: this.name,
     description: this.description,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
     createdBy: this.createdBy.toProfileJSONFor(user),
     articles: this.articles,
   };
+};
+
+CategorySchema.methods.addArticle = function (articleID) {
+  if (this.articles.indexOf(articleID) === -1) {
+    this.articles.push(articleID);
+  }
+
+  return this.save();
 };
 
 mongoose.model('Category', CategorySchema);
