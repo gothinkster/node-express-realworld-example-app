@@ -1,5 +1,5 @@
-### Categories video demo
-![demo](https://gitlab.com/123MwanjeMike/node-express-realworld-example-app/blob/11-categories/public/demo_video.webm?raw=true)
+### Categories video demo link here
+![categories video demo](https://gitlab.com/123MwanjeMike/node-express-realworld-example-app/blob/11-categories/public/demo_video.webm?raw=true)
 
 # ![Node/Express/Mongoose Example App](project-logo.png)
 
