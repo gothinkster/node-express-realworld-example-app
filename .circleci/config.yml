@@ -17,4 +17,3 @@ jobs:
       - run:
           name: Trigger integration tests
           command: curl -X POST "https://circleci.com/api/v1.1/project/github/anishkny/realworld-e2e-test?circle-token=$CIRCLE_CI_TOKEN"
-
