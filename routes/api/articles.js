@@ -90,7 +90,7 @@ router.get('/', auth.optional, (req, res, next) => {
         const user = result[2];
 
         return res.json({
-          articles: articles.map((article) => article.toJSONFor(user)),
+          articles: articles.map((article) => article.toJSONWithCategories(user)),
           articlesCount,
         });
       });
@@ -315,7 +315,7 @@ router.post('/:article/categories', auth.required, (req, res, next) => {
       if (!user) return res.sendStatus(401);
       if (req.article.author._id.toString() !== req.payload.id.toString()) res.sendStatus(403);
 
-      return Category.find({ name: { $in: req.body.article.categories } }, { _id: 1 })
+      return Category.find({ name: { $in: req.body.article.categories } })
         .then((categoryObjects) => {
           const categories = [];
           for (let i = 0; i < categoryObjects.length; i += 1) {
