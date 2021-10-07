@@ -1,3 +1,6 @@
+### Categories video demo
+![demo](https://gitlab.com/123MwanjeMike/node-express-realworld-example-app/blob/11-categories/public/demo_video.webm?raw=true)
+
 # ![Node/Express/Mongoose Example App](project-logo.png)
 
 [![Build Status](https://travis-ci.org/anishkny/node-express-realworld-example-app.svg?branch=master)](https://travis-ci.org/anishkny/node-express-realworld-example-app)
