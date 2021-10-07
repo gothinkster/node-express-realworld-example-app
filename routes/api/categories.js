@@ -24,9 +24,52 @@ router.post('/', auth.required, (req, res, next) => {
 });
 
 // get all categories
-router.get('/', (req, res, next) => {
-  Category.find()
-    .then((categories) => res.json(categories))
+router.get('/', auth.optional, (req, res, next) => {
+  const query = {};
+  let limit = 20;
+  let offset = 0;
+
+  if (typeof req.query.limit !== 'undefined') {
+    limit = req.query.limit;
+  }
+
+  if (typeof req.query.offset !== 'undefined') {
+    offset = req.query.offset;
+  }
+
+  if (typeof req.query.tag !== 'undefined') {
+    query.tagList = { $in: [req.query.tag] };
+  }
+
+  Promise.all([req.query.createdBy ? User.findOne({ createdBy: req.query.createdBy }) : null])
+    .then((results) => {
+      const createdBy = results[0];
+
+      if (createdBy) {
+        query.createdBy = createdBy._id;
+      }
+
+      return Promise.all([
+        Category.find(query)
+          .limit(Number(limit))
+          .skip(Number(offset))
+          .sort({ createdAt: 'desc' })
+          .populate('articles')
+          .populate('createdBy')
+          .exec(),
+        Category.count(query).exec(),
+        req.payload ? User.findById(req.payload.id) : null,
+      ]).then((results) => {
+        const categories = results[0];
+        const categoriesCount = results[1];
+        const user = results[2];
+
+        return res.json({
+          categories: categories.map((category) => category.toJSONFor(user)),
+          categoriesCount,
+        });
+      });
+    })
     .catch(next);
 });
 

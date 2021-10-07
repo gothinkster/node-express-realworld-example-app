@@ -80,6 +80,7 @@ router.get('/', auth.optional, (req, res, next) => {
           .skip(Number(offset))
           .sort({ createdAt: 'desc' })
           .populate('author')
+          .populate('categories')
           .exec(),
         Article.count(query).exec(),
         req.payload ? User.findById(req.payload.id) : null,

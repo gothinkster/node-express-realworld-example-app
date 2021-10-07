@@ -54,10 +54,29 @@ ArticleSchema.methods.toJSONFor = function (user) {
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
     tagList: this.tagList,
-    categories: this.categories,
+    categories: this.toJSONForCategories(),
     favorited: user ? user.isFavorite(this._id) : false,
     favoritesCount: this.favoritesCount,
     author: this.author.toProfileJSONFor(user),
+  };
+};
+
+ArticleSchema.methods.toJSONForCategories = function () {
+  const result = [];
+  for (let i = 0; i < this.categories.length; i += 1) {
+    result.push(this.categories[i].toBasicJSONFor());
+  }
+
+  return result;
+};
+
+ArticleSchema.methods.toBasicJSONFor = function () {
+  return {
+    slug: this.slug,
+    title: this.title,
+    description: this.description,
+    body: this.body,
+    tagList: this.tagList,
   };
 };
 

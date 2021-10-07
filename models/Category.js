@@ -19,14 +19,27 @@ const CategorySchema = new mongoose.Schema(
 
 CategorySchema.plugin(uniqueValidator, { message: 'already exists.' });
 
+CategorySchema.methods.toJSONForArticles = function () {
+  const result = [];
+  for (let i = 0; i < this.articles.length; i += 1) {
+    result.push(this.articles[i].toBasicJSONFor());
+  }
+  return result;
+};
+
 CategorySchema.methods.toJSONFor = function (user) {
   return {
     name: this.name,
     description: this.description,
-    createdAt: this.createdAt,
-    updatedAt: this.updatedAt,
     createdBy: this.createdBy.toProfileJSONFor(user),
-    articles: this.articles,
+    articles: this.toJSONForArticles(),
+  };
+};
+
+CategorySchema.methods.toBasicJSONFor = function () {
+  return {
+    name: this.name,
+    description: this.description,
   };
 };
 
