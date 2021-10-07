@@ -155,15 +155,17 @@ router.post('/', auth.required, (req, res, next) => {
 // return a article
 router.get('/:article', auth.optional, (req, res, next) => {
   Promise.all([
-    req.payload ? User.findById(req.payload.id) : null,
-    req.article.populate('author').execPopulate(),
-  ])
-    .then((results) => {
-      const user = results[0];
+    Article.findOne({ slug: req.params.article })
+      .populate('author')
+      .populate('categories')
+      .exec(),
+    User.findById(req.article.author),
+  ]).then((results) => {
+    const article = results[0];
+    const user = results[1];
 
-      return res.json({ article: req.article.toJSONFor(user) });
-    })
-    .catch(next);
+    res.json({ article: article.toJSONWithCategories(user) });
+  });
 });
 
 // update article
