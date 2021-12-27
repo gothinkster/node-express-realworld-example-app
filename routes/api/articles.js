@@ -131,7 +131,6 @@ router.post('/', auth.required, function(req, res, next) {
     article.author = user;
 
     return article.save().then(function(){
-      console.log(article.author);
       return res.json({article: article.toJSONFor(user)});
     });
   }).catch(next);
@@ -254,7 +253,7 @@ router.post('/:article/comments', auth.required, function(req, res, next) {
     comment.author = user;
 
     return comment.save().then(function(){
-      req.article.comments.push(comment);
+      req.article.comments = req.article.comments.concat([comment]);
 
       return req.article.save().then(function(article) {
         res.json({comment: comment.toJSONFor(user)});
