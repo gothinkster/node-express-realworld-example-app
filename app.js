@@ -39,7 +39,6 @@ if(isProduction){
 
 require('./models/User');
 require('./models/Article');
-require('./models/Category');
 require('./models/Comment');
 require('./config/passport');
 
