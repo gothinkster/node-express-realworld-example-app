@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Start app and test
           command: |
-            npm run
+            npm install
             npm run start & sleep 5
             curl http://localhost:3000/api/tags
             npm run test

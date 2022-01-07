@@ -4,7 +4,7 @@ node_js: '8'
 sudo: required
 services: mongodb
 
-install: npm run
+install: npm install
 
 before_script: npm run start & sleep 5
 script: npm run test
