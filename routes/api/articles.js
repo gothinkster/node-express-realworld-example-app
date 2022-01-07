@@ -90,7 +90,9 @@ router.get('/', auth.optional, (req, res, next) => {
         const user = result[2];
 
         return res.json({
-          articles: articles.map((article) => article.toJSONWithCategories(user)),
+          articles: articles.map((article) =>
+            article.toJSONWithCategories(user)
+          ),
           articlesCount,
         });
       });
@@ -147,7 +149,9 @@ router.post('/', auth.required, (req, res, next) => {
 
       article.author = user;
 
-      return article.save().then(() => res.json({ article: article.toJSONFor(user) }));
+      return article
+        .save()
+        .then(() => res.json({ article: article.toJSONFor(user) }));
     })
     .catch(next);
 });
@@ -223,9 +227,13 @@ router.post('/:article/favorite', auth.required, (req, res, next) => {
         return res.sendStatus(401);
       }
 
-      return user.favorite(articleId)
-        .then(() => req.article.updateFavoriteCount()
-          .then((article) => res.json({ article: article.toJSONFor(user) })));
+      return user
+        .favorite(articleId)
+        .then(() =>
+          req.article
+            .updateFavoriteCount()
+            .then((article) => res.json({ article: article.toJSONFor(user) }))
+        );
     })
     .catch(next);
 });
@@ -240,9 +248,13 @@ router.delete('/:article/favorite', auth.required, (req, res, next) => {
         return res.sendStatus(401);
       }
 
-      return user.unfavorite(articleId)
-        .then(() => req.article.updateFavoriteCount()
-          .then((article) => res.json({ article: article.toJSONFor(user) })));
+      return user
+        .unfavorite(articleId)
+        .then(() =>
+          req.article
+            .updateFavoriteCount()
+            .then((article) => res.json({ article: article.toJSONFor(user) }))
+        );
     })
     .catch(next);
 });
@@ -250,22 +262,28 @@ router.delete('/:article/favorite', auth.required, (req, res, next) => {
 // return an article's comments
 router.get('/:article/comments', auth.optional, (req, res, next) => {
   Promise.resolve(req.payload ? User.findById(req.payload.id) : null)
-    .then((user) => req.article
-      .populate({
-        path: 'comments',
-        populate: {
-          path: 'author',
-        },
-        options: {
-          sort: {
-            createdAt: 'desc',
+    .then((user) =>
+      req.article
+        .populate({
+          path: 'comments',
+          populate: {
+            path: 'author',
           },
-        },
-      })
-      .execPopulate()
-      .then(() => res.json({
-        comments: req.article.comments.map((comment) => comment.toJSONFor(user)),
-      })))
+          options: {
+            sort: {
+              createdAt: 'desc',
+            },
+          },
+        })
+        .execPopulate()
+        .then(() =>
+          res.json({
+            comments: req.article.comments.map((comment) =>
+              comment.toJSONFor(user)
+            ),
+          })
+        )
+    )
     .catch(next);
 });
 
@@ -282,7 +300,7 @@ router.post('/:article/comments', auth.required, (req, res, next) => {
       comment.author = user;
 
       return comment.save().then(() => {
-        req.article.comments.push(comment);
+        req.article.comments = req.article.comments.concat([comment]);
 
         return req.article.save().then(() => {
           res.json({ comment: comment.toJSONFor(user) });
@@ -292,30 +310,27 @@ router.post('/:article/comments', auth.required, (req, res, next) => {
     .catch(next);
 });
 
-router.delete(
-  '/:article/comments/:comment',
-  auth.required,
-  (req, res) => {
-    if (req.comment.author.toString() === req.payload.id.toString()) {
-      req.article.comments.remove(req.comment._id);
-      req.article
-        .save()
-        .then(Comment.find({ _id: req.comment._id }).remove().exec())
-        .then(() => {
-          res.sendStatus(204);
-        });
-    } else {
-      res.sendStatus(403);
-    }
-  },
-);
+router.delete('/:article/comments/:comment', auth.required, (req, res) => {
+  if (req.comment.author.toString() === req.payload.id.toString()) {
+    req.article.comments.remove(req.comment._id);
+    req.article
+      .save()
+      .then(Comment.find({ _id: req.comment._id }).remove().exec())
+      .then(() => {
+        res.sendStatus(204);
+      });
+  } else {
+    res.sendStatus(403);
+  }
+});
 
 // add categories
 router.post('/:article/categories', auth.required, (req, res, next) => {
   User.findById(req.payload.id)
     .then((user) => {
       if (!user) return res.sendStatus(401);
-      if (req.article.author._id.toString() !== req.payload.id.toString()) res.sendStatus(403);
+      if (req.article.author._id.toString() !== req.payload.id.toString())
+        res.sendStatus(403);
 
       return Category.find({ name: { $in: req.body.article.categories } })
         .then((categoryObjects) => {
@@ -324,21 +339,22 @@ router.post('/:article/categories', auth.required, (req, res, next) => {
             categories.push(categoryObjects[i]._id);
           }
 
-          Category.collection.updateMany(
-            { _id: { $in: categories } },
-            { $addToSet: { articles: req.article._id } },
-          ).then(() => Article.findByIdAndUpdate(
-            req.article._id,
-            {
-              $addToSet: {
-                categories: {
-                  $each: categories,
+          Category.collection
+            .updateMany(
+              { _id: { $in: categories } },
+              { $addToSet: { articles: req.article._id } }
+            )
+            .then(() =>
+              Article.findByIdAndUpdate(req.article._id, {
+                $addToSet: {
+                  categories: {
+                    $each: categories,
+                  },
                 },
-              },
-            },
-          )
-            .then(() => res.json({ article: req.article.toJSONFor(user) }))
-            .catch(next))
+              })
+                .then(() => res.json({ article: req.article.toJSONFor(user) }))
+                .catch(next)
+            )
             .catch(next);
         })
         .catch(next);
