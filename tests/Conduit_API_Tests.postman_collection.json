@@ -1665,39 +1665,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Delete Comment for Article",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "XMLHttpRequest"
-							},
-							{
-								"key": "Authorization",
-								"value": "Token {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{apiUrl}}/articles/{{slug}}/comments/1",
-							"host": [
-								"{{apiUrl}}"
-							],
-							"path": [
-								"articles",
-								"{{slug}}",
-								"comments",
-								"1"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -1936,46 +1903,6 @@
 							],
 							"path": [
 								"tags"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Cleanup",
-			"item": [
-				{
-					"name": "Delete Article",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "XMLHttpRequest"
-							},
-							{
-								"key": "Authorization",
-								"value": "Token {{token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{apiUrl}}/articles/{{slug}}",
-							"host": [
-								"{{apiUrl}}"
-							],
-							"path": [
-								"articles",
-								"{{slug}}"
 							]
 						}
 					},
