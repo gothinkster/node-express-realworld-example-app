@@ -8,13 +8,13 @@ jobs:
   newman-collection-run:
     executor: newman/postman-newman-docker
     steps:
+      - run: apt-get update && apt-get install -y openssh-client git
       - checkout
-
       - newman/newman-run:
           collection: https://api.getpostman.com/collections/12001378-1f2f0db9-e42c-47e9-98ee-4d32a207dbe5?apikey=$POSTMAN_API_KEY
           environment: https://api.getpostman.com/environments/12001378-775c0167-212d-4ea5-93f1-174b78c16f30?apikey=$POSTMAN_API_KEY
 
 workflows:
-  example-workflow:
+  conduit-automated-testing:
     jobs:
       - newman-collection-run
