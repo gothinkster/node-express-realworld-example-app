@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "12f7643d-1d1d-4c89-8d5b-70c4ee603631",
+		"_postman_id": "d4187409-b56f-40ee-944e-647626a3bcd3",
 		"name": "Conduit API Tests",
 		"description": "Collection for testing the Conduit API\n\nhttps://github.com/gothinkster/realworld",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -59,7 +59,80 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"user\":{\"email\":\"john@jacob.com\", \"password\":\"johnnyjacob\", \"username\":\"johnjacob\"}}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "X-HTTP-Method-Override"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "270"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"10e-bFy1UZFliraC0RRGzqSMiw\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:34:52 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"username\": \"johnjacob\",\n        \"email\": \"john@jacob.com\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZGVhMGJjOTZiOTcwODgxYTkzZWFmMyIsInVzZXJuYW1lIjoiam9obmphY29iIiwiZXhwIjoxNjQ3MTY0MDkyLCJpYXQiOjE2NDE5ODAwOTJ9.lmBTLqkLvqUKyjTC_NaZrTORXdY_4PIJahKXZ0X3pNI\"\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Login",
@@ -110,7 +183,81 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"user\":{\"email\":\"john@jacob.com\", \"password\":\"johnnyjacob\"}}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "X-HTTP-Method-Override"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "270"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"10e-yO/FlyZWGdTVxihsiX4krg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:35:08 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"username\": \"johnjacob\",\n        \"email\": \"john@jacob.com\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZGVhMGJjOTZiOTcwODgxYTkzZWFmMyIsInVzZXJuYW1lIjoiam9obmphY29iIiwiZXhwIjoxNjQ3MTY0MTA4LCJpYXQiOjE2NDE5ODAxMDh9.MiD3XXQMy_wYltQ6rrdomGrekDcMvjPRmhyOM556_-E\"\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Login and Remember Token",
@@ -118,7 +265,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"var responseJSON = JSON.parse(responseBody);",
 									"",
@@ -135,8 +281,12 @@
 									"}",
 									"",
 									"tests['Environment variable \"token\" has been set'] = environment.token === user.token;",
-									""
-								]
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -167,7 +317,81 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Login and Remember Token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"user\":{\"email\":\"john@jacob.com\", \"password\":\"johnnyjacob\"}}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/users/login",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "X-HTTP-Method-Override"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "270"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"10e-W6jMlOKAP6FUsAxrKnn1sg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:37:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"username\": \"johnjacob\",\n        \"email\": \"john@jacob.com\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZGVhMGJjOTZiOTcwODgxYTkzZWFmMyIsInVzZXJuYW1lIjoiam9obmphY29iIiwiZXhwIjoxNjQ3MTY0Mjc1LCJpYXQiOjE2NDE5ODAyNzV9.ApTifFP_gbZLFAWD8ZOg31LJ9GKeDsbqjyQ4fC2uXvg\"\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Current User",
@@ -217,7 +441,76 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Current User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/user",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "270"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"10e-ZfMKkH9DlD0wb2Rk98MVRQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:38:14 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"username\": \"johnjacob\",\n        \"email\": \"john@jacob.com\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZGVhMGJjOTZiOTcwODgxYTkzZWFmMyIsInVzZXJuYW1lIjoiam9obmphY29iIiwiZXhwIjoxNjQ3MTY0Mjk0LCJpYXQiOjE2NDE5ODAyOTR9.GMK_g8HbKY-BLp3EwNxTSPzdJRGJhHTUZ13yXo0KbB0\"\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Update User",
@@ -271,7 +564,80 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Update User",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"user\":{\"email\":\"john@jacob.com\"}}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/user",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "270"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"10e-WhmB2rXyB1Iwc7Rw+qqpBg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:38:23 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"username\": \"johnjacob\",\n        \"email\": \"john@jacob.com\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZGVhMGJjOTZiOTcwODgxYTkzZWFmMyIsInVzZXJuYW1lIjoiam9obmphY29iIiwiZXhwIjoxNjQ3MTY0MzAzLCJpYXQiOjE2NDE5ODAzMDN9.bteLA-zX9a_7KYmbqiskdpeAIuxgNzTQwGkgfgIZe-k\"\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -350,7 +716,77 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Feed",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles/feed",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"feed"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "433"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b1-XrRY+1rTL4y76Pv6XMXBAg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:45:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"With two hands\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:43:00.694Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": true,\n            \"favoritesCount\": 1,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": true\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "All Articles",
@@ -423,7 +859,76 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "All Articles",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "436"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b4-m87SVNYREoZgRjboY76QWQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:40:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"Very carefully.\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:39:39.024Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 0,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "All Articles with auth",
@@ -496,7 +1001,76 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "All Articles with auth",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "436"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b4-m87SVNYREoZgRjboY76QWQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:40:26 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"Very carefully.\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:39:39.024Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 0,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Articles by Author",
@@ -575,7 +1149,82 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Articles by Author",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles?author=johnjacob",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									],
+									"query": [
+										{
+											"key": "author",
+											"value": "johnjacob"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "433"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b1-XrRY+1rTL4y76Pv6XMXBAg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:45:59 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"With two hands\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:43:00.694Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": true,\n            \"favoritesCount\": 1,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": true\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Articles by Author with auth",
@@ -654,7 +1303,82 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Articles by Author with auth",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles?author=johnjacob",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									],
+									"query": [
+										{
+											"key": "author",
+											"value": "johnjacob"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "436"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b4-m87SVNYREoZgRjboY76QWQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:40:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"Very carefully.\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:39:39.024Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 0,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Articles Favorited by Username",
@@ -662,7 +1386,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"var is200Response = responseCode.code === 200;",
 									"",
@@ -697,7 +1420,8 @@
 									"    }",
 									"}",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -718,7 +1442,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/articles?favorited=jane",
+							"raw": "{{apiUrl}}/articles?favorited=johnjacob",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -728,12 +1452,87 @@
 							"query": [
 								{
 									"key": "favorited",
-									"value": "jane"
+									"value": "johnjacob"
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Articles Favorited by Username",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles?favorited=johnjacob",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									],
+									"query": [
+										{
+											"key": "favorited",
+											"value": "johnjacob"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "433"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b1-NHRUvAH8tbtBAQr2LqQJUg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:47:05 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"With two hands\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:46:25.914Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": true,\n            \"favoritesCount\": 1,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": true\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Articles by Tag",
@@ -812,7 +1611,82 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Articles by Tag",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles?tag=dragons",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									],
+									"query": [
+										{
+											"key": "tag",
+											"value": "dragons"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "436"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b4-m87SVNYREoZgRjboY76QWQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:39:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"Very carefully.\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:39:39.024Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 0,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Create Article",
@@ -880,7 +1754,84 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Article",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"article\": {\n        \"title\": \"How to train your dragon\",\n        \"description\": \"Ever wonder how?\",\n        \"body\": \"Very carefully.\",\n        \"tagList\": [\n            \"dragons\",\n            \"training\"\n        ]\n    }\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/articles",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "X-HTTP-Method-Override"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "415"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"19f-HKRGfjD8D/NdN66KCCxMJA\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:39:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"article\": {\n        \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n        \"title\": \"How to train your dragon\",\n        \"description\": \"Ever wonder how?\",\n        \"body\": \"Very carefully.\",\n        \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n        \"updatedAt\": \"2022-01-12T09:39:39.024Z\",\n        \"tagList\": [\n            \"dragons\",\n            \"training\"\n        ],\n        \"favorited\": false,\n        \"favoritesCount\": 0,\n        \"author\": {\n            \"username\": \"johnjacob\",\n            \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n            \"following\": false\n        }\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Single Article by slug",
@@ -942,7 +1893,77 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Single Article by slug",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles/{{slug}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"{{slug}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "413"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"19d-6zSCHsp6GAP/kRhP6ShBbg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:41:42 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"article\": {\n        \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n        \"title\": \"How to train your dragon\",\n        \"description\": \"Ever wonder how?\",\n        \"body\": \"With two hands\",\n        \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n        \"updatedAt\": \"2022-01-12T09:41:23.989Z\",\n        \"tagList\": [\n            \"dragons\",\n            \"training\"\n        ],\n        \"favorited\": true,\n        \"favoritesCount\": 1,\n        \"author\": {\n            \"username\": \"johnjacob\",\n            \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n            \"following\": false\n        }\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Update Article",
@@ -1010,7 +2031,81 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Update Article",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"article\":{\"body\":\"With two hands\"}}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/articles/{{slug}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"{{slug}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "413"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"19d-6zSCHsp6GAP/kRhP6ShBbg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:41:23 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"article\": {\n        \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n        \"title\": \"How to train your dragon\",\n        \"description\": \"Ever wonder how?\",\n        \"body\": \"With two hands\",\n        \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n        \"updatedAt\": \"2022-01-12T09:41:23.989Z\",\n        \"tagList\": [\n            \"dragons\",\n            \"training\"\n        ],\n        \"favorited\": true,\n        \"favoritesCount\": 1,\n        \"author\": {\n            \"username\": \"johnjacob\",\n            \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n            \"following\": false\n        }\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Favorite Article",
@@ -1079,7 +2174,86 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Favorite Article",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/articles/{{slug}}/favorite",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"{{slug}}",
+										"favorite"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "X-HTTP-Method-Override"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "414"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"19e-liyb2qdHhzeHsvuC3zpesg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:41:12 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"article\": {\n        \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n        \"title\": \"How to train your dragon\",\n        \"description\": \"Ever wonder how?\",\n        \"body\": \"Very carefully.\",\n        \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n        \"updatedAt\": \"2022-01-12T09:41:12.298Z\",\n        \"tagList\": [\n            \"dragons\",\n            \"training\"\n        ],\n        \"favorited\": true,\n        \"favoritesCount\": 1,\n        \"author\": {\n            \"username\": \"johnjacob\",\n            \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n            \"following\": false\n        }\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Unfavorite Article",
@@ -1147,7 +2321,82 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Unfavorite Article",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/articles/{{slug}}/favorite",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"{{slug}}",
+										"favorite"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "413"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"19d-AKkelc3ZTygYGWxbDTnU9Q\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:47:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"article\": {\n        \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n        \"title\": \"How to train your dragon\",\n        \"description\": \"Ever wonder how?\",\n        \"body\": \"With two hands\",\n        \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n        \"updatedAt\": \"2022-01-12T09:47:55.018Z\",\n        \"tagList\": [\n            \"dragons\",\n            \"training\"\n        ],\n        \"favorited\": false,\n        \"favoritesCount\": 0,\n        \"author\": {\n            \"username\": \"johnjacob\",\n            \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n            \"following\": true\n        }\n    }\n}"
+						}
+					]
 				}
 			],
 			"auth": {
@@ -1254,7 +2503,72 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "All Articles",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "435"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b3-drXhhOktK2jByAjl3aOd+w\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:41:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"With two hands\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:41:23.989Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 1,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Articles by Author",
@@ -1329,7 +2643,78 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Articles by Author",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles?author=johnjacob",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									],
+									"query": [
+										{
+											"key": "author",
+											"value": "johnjacob"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "435"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b3-drXhhOktK2jByAjl3aOd+w\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:42:02 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"With two hands\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:41:23.989Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 1,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Articles Favorited by Username",
@@ -1337,7 +2722,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"var is200Response = responseCode.code === 200;",
 									"",
@@ -1372,7 +2756,8 @@
 									"    }",
 									"}",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -1389,7 +2774,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/articles?favorited=jane",
+							"raw": "{{apiUrl}}/articles?favorited=johnjacob",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -1399,12 +2784,83 @@
 							"query": [
 								{
 									"key": "favorited",
-									"value": "jane"
+									"value": "johnjacob"
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Articles Favorited by Username",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles?favorited=johnjacob",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									],
+									"query": [
+										{
+											"key": "favorited",
+											"value": "johnjacob"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "435"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b3-HuCgcdZIZudUhp2Hi1a2yg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:47:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"With two hands\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:46:25.914Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 1,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Articles by Tag",
@@ -1479,7 +2935,78 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Articles by Tag",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles?tag=dragons",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles"
+									],
+									"query": [
+										{
+											"key": "tag",
+											"value": "dragons"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "435"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b3-drXhhOktK2jByAjl3aOd+w\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:42:13 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"articles\": [\n        {\n            \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n            \"title\": \"How to train your dragon\",\n            \"description\": \"Ever wonder how?\",\n            \"body\": \"With two hands\",\n            \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n            \"updatedAt\": \"2022-01-12T09:41:23.989Z\",\n            \"tagList\": [\n                \"dragons\",\n                \"training\"\n            ],\n            \"favorited\": false,\n            \"favoritesCount\": 1,\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": false\n            }\n        }\n    ],\n    \"articlesCount\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Single Article by slug",
@@ -1537,7 +3064,73 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Single Article by slug",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles/{{slug}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"{{slug}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "414"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"19e-wggoV4Zz4ad8MOvEtyyZDg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:42:19 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"article\": {\n        \"slug\": \"how-to-train-your-dragon-bg0r3s\",\n        \"title\": \"How to train your dragon\",\n        \"description\": \"Ever wonder how?\",\n        \"body\": \"With two hands\",\n        \"createdAt\": \"2022-01-12T09:39:39.024Z\",\n        \"updatedAt\": \"2022-01-12T09:41:23.989Z\",\n        \"tagList\": [\n            \"dragons\",\n            \"training\"\n        ],\n        \"favorited\": false,\n        \"favoritesCount\": 1,\n        \"author\": {\n            \"username\": \"johnjacob\",\n            \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n            \"following\": false\n        }\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -1550,31 +3143,29 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"var is200Response = responseCode.code === 200",
 									"",
 									"tests['Response code is 200 OK'] = is200Response;",
 									"",
-									"if(is200Response){",
+									"if (is200Response) {",
 									"    var responseJSON = JSON.parse(responseBody);",
 									"",
 									"    tests['Response contains \"comments\" property'] = responseJSON.hasOwnProperty('comments');",
 									"",
-									"    if(responseJSON.comments.length){",
+									"    if (responseJSON.comments.length) {",
 									"        var comment = responseJSON.comments[0];",
 									"",
 									"        tests['Comment has \"id\" property'] = comment.hasOwnProperty('id');",
 									"        tests['Comment has \"body\" property'] = comment.hasOwnProperty('body');",
 									"        tests['Comment has \"createdAt\" property'] = comment.hasOwnProperty('createdAt');",
 									"        tests['\"createdAt\" property is an ISO 8601 timestamp'] = new Date(comment.createdAt).toISOString() === comment.createdAt;",
-									"        tests['Comment has \"updatedAt\" property'] = comment.hasOwnProperty('updatedAt');",
-									"        tests['\"updatedAt\" property is an ISO 8601 timestamp'] = new Date(comment.updatedAt).toISOString() === comment.updatedAt;",
 									"        tests['Comment has \"author\" property'] = comment.hasOwnProperty('author');",
 									"    }",
 									"}",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -1606,7 +3197,78 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "All Comments for Article",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/articles/{{slug}}/comments",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"{{slug}}",
+										"comments"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "454"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1c6-e2msdaJ1lc2TqbT+/LHC5w\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:53:02 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"comments\": [\n        {\n            \"id\": \"61dea2a496b970881a93eaf6\",\n            \"body\": \"Thank you so much!\",\n            \"createdAt\": \"2022-01-12T09:43:00.685Z\",\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": true\n            }\n        },\n        {\n            \"id\": \"61dea28996b970881a93eaf5\",\n            \"body\": \"Thank you so much!\",\n            \"createdAt\": \"2022-01-12T09:42:33.139Z\",\n            \"author\": {\n                \"username\": \"johnjacob\",\n                \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n                \"following\": true\n            }\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Create Comment for Article",
@@ -1664,7 +3326,86 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Comment for Article",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"comment\":{\"body\":\"Thank you so much!\"}}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/articles/{{slug}}/comments",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"articles",
+										"{{slug}}",
+										"comments"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "X-HTTP-Method-Override"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "232"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"e8-qDM6D61ks7nE+xOMlqULzA\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:42:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"comment\": {\n        \"id\": \"61dea28996b970881a93eaf5\",\n        \"body\": \"Thank you so much!\",\n        \"createdAt\": \"2022-01-12T09:42:33.139Z\",\n        \"author\": {\n            \"username\": \"johnjacob\",\n            \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n            \"following\": false\n        }\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -1728,7 +3469,77 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Profile",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/profiles/johnjacob",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"profiles",
+										"johnjacob"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "121"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"79-PZTdFXqMXUlluJY60P6ZeQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:43:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"profile\": {\n        \"username\": \"johnjacob\",\n        \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n        \"following\": true\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Follow Profile",
@@ -1793,7 +3604,86 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Follow Profile",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"user\":{\"email\":\"john@jacob.com\"}}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/profiles/johnjacob/follow",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"profiles",
+										"johnjacob",
+										"follow"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "X-HTTP-Method-Override"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "121"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"79-PZTdFXqMXUlluJY60P6ZeQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:43:26 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"profile\": {\n        \"username\": \"johnjacob\",\n        \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n        \"following\": true\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "Unfollow Profile",
@@ -1854,7 +3744,78 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Unfollow Profile",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									},
+									{
+										"key": "Authorization",
+										"value": "Token {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/profiles/johnjacob/follow",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"profiles",
+										"johnjacob",
+										"follow"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "122"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"7a-Q9mg30552G3PXtWnlRzaGQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:43:41 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"profile\": {\n        \"username\": \"johnjacob\",\n        \"image\": \"https://static.productionready.io/images/smiley-cyrus.jpg\",\n        \"following\": false\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -1906,7 +3867,72 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "All Tags",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "XMLHttpRequest"
+									}
+								],
+								"url": {
+									"raw": "{{apiUrl}}/tags",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"tags"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "31"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1f-q2jSVeFRQkw8Bj0PHU8e3A\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jan 2022 09:44:01 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"tags\": [\n        \"dragons\",\n        \"training\"\n    ]\n}"
+						}
+					]
 				}
 			]
 		}
