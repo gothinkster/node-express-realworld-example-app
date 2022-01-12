@@ -9,8 +9,9 @@ jobs:
     executor: newman/postman-newman-docker
     steps:
       - checkout
+
       - newman/newman-run:
-          collection: https://api.getpostman.com/collections/12001378-1f2f0db9-e42c-47e9-98ee-4d32a207dbe5?apikey=$POSTMAN_API_KEY
+          collection: https://api.getpostman.com/collections/12001378-d4187409-b56f-40ee-944e-647626a3bcd3?apikey=$POSTMAN_API_KEY
           environment: https://api.getpostman.com/environments/12001378-775c0167-212d-4ea5-93f1-174b78c16f30?apikey=$POSTMAN_API_KEY
 
 workflows:
