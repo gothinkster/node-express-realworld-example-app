@@ -12,6 +12,8 @@ permissions:
   security-events: write
   actions: read
 
+
+
 jobs:
   security-testing:
     name: security-testing
