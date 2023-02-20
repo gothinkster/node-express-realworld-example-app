@@ -8,7 +8,7 @@
 
 This repo is functionality complete — PRs and issues welcome!
 
-# Getting started
+# Getting started gogogo
 
 To get the Node server running locally:
 
