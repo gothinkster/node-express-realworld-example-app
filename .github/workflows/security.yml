@@ -1,0 +1,15 @@
+name: Security Testing
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+
+jobs:
+  security-testing:
+    name: security-testing
+    uses: affinidi/pipeline-security/.github/workflows/security-scanners.yml@feat-sonarcloud
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
