@@ -13,7 +13,10 @@ This repo is functionality complete — PRs and issues welcome!
 To get the Node server running locally:
 
 - Clone this repo
-- `npm install` to install all required dependencies
+- `npm install` to install all required dependencies.
+
+Where there are instances of npm vulnerabilties that requires semver-major dependency updates after running `npm install` dependencies, fix error by changing the package.json version manually to the version recommended. Packages such as ejs, express-jwt, jsonwebtoken, mongoose are likely to fall .under these categeories due to regular updates.
+
 - Install MongoDB Community Edition ([instructions](https://docs.mongodb.com/manual/installation/#tutorials)) and run it by executing `mongod`
 - `npm run dev` to start the local server
 
