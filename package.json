@@ -9,8 +9,8 @@
   },
   "private": true,
   "prisma": {
-    "seed": "tsx ./prisma/seed.ts",
-    "schema": "./prisma/schema.prisma"
+    "seed": "tsx ./src/prisma/seed.ts",
+    "schema": "./src/prisma/schema.prisma"
   },
   "dependencies": {
     "@ngneat/falso": "^7.1.1",

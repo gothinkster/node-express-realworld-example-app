@@ -10,7 +10,6 @@
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "src/tests/**/*",
-    "src/prisma/**/*",
   ],
   "include": [
     "src/**/*.ts"
