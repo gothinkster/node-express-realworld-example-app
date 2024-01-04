@@ -38,6 +38,14 @@ Run the following command to generate the Prisma Client which will include types
 npx prisma generate
 ```
 
+### Apply any SQL migration script
+
+Run the following command to create/update your database based on existing sql migration scripts:
+
+```shell
+npx prisma migrate deploy
+```
+
 ### Run the project
 
 Run the following command to run the project:

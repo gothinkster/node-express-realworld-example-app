@@ -36,14 +36,14 @@ export const generateArticle = async (id: number) =>
 export const generateComment = async (id: number, slug: string) =>
   addComment(randParagraph(), slug, id);
 
-export const main = async () => {
+const main = async () => {
   try {
-    const users = await Promise.all(Array.from({length: 30}, () => generateUser()));
+    const users = await Promise.all(Array.from({length: 12}, () => generateUser()));
     users?.map(user => user);
 
     // eslint-disable-next-line no-restricted-syntax
     for await (const user of users) {
-      const articles = await Promise.all(Array.from({length: 20}, () => generateArticle(user.id)));
+      const articles = await Promise.all(Array.from({length: 12}, () => generateArticle(user.id)));
 
       // eslint-disable-next-line no-restricted-syntax
       for await (const article of articles) {
