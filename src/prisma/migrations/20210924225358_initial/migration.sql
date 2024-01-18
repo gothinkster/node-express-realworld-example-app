@@ -4,7 +4,7 @@ CREATE TABLE `Article` (
                            `slug` VARCHAR(1000) NOT NULL,
                            `title` VARCHAR(1000) NOT NULL,
                            `description` VARCHAR(2000) NOT NULL,
-                           `body` VARCHAR(10000) NOT NULL,
+                           `body` VARCHAR(3072) NOT NULL,
                            `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
                            `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
                            `authorId` INTEGER NOT NULL,
