@@ -1,7 +1,6 @@
 import {
   randEmail,
   randFullName,
-  randLines,
   randParagraph,
   randPassword, randPhrase,
   randWord
@@ -27,7 +26,7 @@ export const generateArticle = async (id: number) =>
     {
       title: randPhrase(),
       description: randParagraph(),
-      body: randLines({ length: 10 }).join(' '),
+      body: randParagraph(),
       tagList: randWord({ length: 4 }),
     },
     id,
