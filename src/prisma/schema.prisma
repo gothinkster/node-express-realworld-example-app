@@ -21,6 +21,7 @@ model Article {
   authorId    Int
   favoritedBy User[]    @relation("UserFavorites")
   comments    Comment[]
+  viewCount   Int       @default(0)
 }
 
 model Comment {
