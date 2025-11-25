@@ -1,16 +1,15 @@
-# RealWorld Conduit API - Workshop Demo Application
+# RealWorld Conduit API
 
-This is a TypeScript/Express.js backend implementation of the RealWorld Conduit API specification, used for Claude Code workshop training.
+TypeScript/Express.js backend implementation of the RealWorld Conduit API specification.
 
 ## Application Overview
 
 **Domain:** Blogging platform (Medium.com clone)
 **Architecture:** Monolithic REST API with Clean Architecture patterns
-**Purpose:** Educational reference application for demonstrating Claude Code capabilities
 
 ## Technology Stack
 
-- **Runtime:** Node.js
+- **Runtime:** Node.js 18+
 - **Framework:** Express.js 4.18
 - **Language:** TypeScript 5.2
 - **ORM:** Prisma 4.16
@@ -37,35 +36,26 @@ This is a TypeScript/Express.js backend implementation of the RealWorld Conduit 
 
 ### Prerequisites
 
-1. **Node.js** - v18+ recommended
-2. **PostgreSQL** - Running on port 5432
-3. **Docker** - For PostgreSQL container
+1. Node.js v18+
+2. PostgreSQL 16 running on localhost:5432
 
 ### Quick Start
 
-**1. Start PostgreSQL:**
-```bash
-docker run -e "POSTGRES_PASSWORD=RealWorldPass123!" \
-  -e "POSTGRES_DB=conduit" \
-  -p 5432:5432 --name workshop-db-ts -d \
-  postgres:16-alpine
-```
-
-**2. Install dependencies:**
+**1. Install dependencies:**
 ```bash
 npm install
 ```
 
-**3. Configure environment:**
+**2. Configure environment:**
 
 Create `.env` file:
 ```env
-DATABASE_URL=postgresql://postgres:RealWorldPass123!@localhost:5432/conduit
-JWT_SECRET=workshop-secret-key-change-in-production
+DATABASE_URL=postgresql://postgres:your-password@localhost:5432/conduit
+JWT_SECRET=your-secret-key-change-in-production
 NODE_ENV=development
 ```
 
-**4. Setup database:**
+**3. Setup database:**
 ```bash
 # Generate Prisma client
 npx prisma generate
@@ -77,7 +67,7 @@ npx prisma migrate deploy
 npx prisma db seed
 ```
 
-**5. Start server:**
+**4. Start server:**
 ```bash
 npx nx serve api
 ```
@@ -189,47 +179,7 @@ npx prettier --write "src/**/*.ts"
 - `POST /api/profiles/:username/follow` - Follow user
 - `DELETE /api/profiles/:username/follow` - Unfollow user
 
-## Workshop Usage Notes
-
-### Common Workshop Tasks
-
-**Explore codebase:**
-```bash
-# Understand project structure
-ls -la src/app/routes/
-
-# View domain models
-cat src/prisma/schema.prisma
-```
-
-**Test coverage analysis:**
-```bash
-npm test -- --coverage --collectCoverageFrom="src/app/**/*.ts"
-```
-
-**Database debugging:**
-```bash
-docker exec -it postgres-workshop-ts psql -U postgres -d conduit
-```
-
-**Performance profiling:**
-```bash
-# Check for N+1 queries in logs
-# Enable Prisma query logging in code
-```
-
-### Workshop Scenarios
-
-This application is used to demonstrate:
-
-1. **Test Coverage Improvement** - Add tests for Articles service
-2. **N+1 Query Detection** - Find and fix Prisma query inefficiencies
-3. **New Feature Implementation** - Add article bookmarking
-4. **Database Performance** - Optimize slow queries with indexes
-5. **API Debugging** - Trace request flow through layers
-6. **Code Review** - Review PR changes for quality and security
-
-## Architecture Layers
+## Architecture
 
 ```
 src/
@@ -249,53 +199,14 @@ src/
 └── tests/                # Unit and integration tests
 ```
 
-## Database Schema Details
+## Security Notes
 
-### User Table
-- Authentication (email, password)
-- Profile (username, bio, image)
-- Relationships (followers, following)
-
-### Article Table
-- Content (title, description, body)
-- Metadata (slug, createdAt, updatedAt)
-- Relationships (author, tags, favorites, comments)
-
-### Comment Table
-- Content (body)
-- Metadata (createdAt, updatedAt)
-- Relationships (author, article)
-
-### Tag Table
-- Simple tag names
-- Many-to-many with Articles
-
-## Known Issues
-
-### Seed Script (Fixed)
-- **Original issue:** Race condition with duplicate tags when creating articles in parallel
-- **Fix:** Articles now created sequentially per user
-- **Commit:** See latest commit on VeryBigThings fork
-
-### Security Notes
-- Demo uses simple JWT authentication
+- JWT authentication for protected endpoints
 - Passwords hashed with bcryptjs
 - Demo data marked with `demo: true` flag
-- Not production-ready (educational only)
+- Not production-ready (educational reference only)
 
 ## Troubleshooting
-
-### Database Connection Issues
-```bash
-# Check PostgreSQL is running
-docker ps | grep workshop-db-ts
-
-# Check logs
-docker logs workshop-db-ts
-
-# Restart container
-docker restart workshop-db-ts
-```
 
 ### Port Conflicts
 ```bash
@@ -310,11 +221,6 @@ kill -9 <PID>
 ```bash
 # Reset everything
 npx prisma migrate reset --force
-
-# Or manually drop database
-docker exec -it postgres-workshop-ts psql -U postgres -c "DROP DATABASE conduit;"
-docker exec -it postgres-workshop-ts psql -U postgres -c "CREATE DATABASE conduit;"
-npx prisma migrate deploy
 ```
 
 ## Resources
@@ -325,21 +231,5 @@ npx prisma migrate deploy
 - Express.js: https://expressjs.com/
 - TypeScript: https://www.typescriptlang.org/
 
-**Repositories:**
-- Original: https://github.com/gothinkster/node-express-realworld-example-app
-- VeryBigThings Fork: https://github.com/VeryBigThings/workshop-demo-ts
-
-## Workshop Integration
-
-This application mirrors the C# demo app (eShopOnWeb) for World Emblem workshops:
-
-| Aspect | eShopOnWeb (C#) | Conduit (TypeScript) |
-|--------|-----------------|---------------------|
-| Domain | E-commerce | Blogging platform |
-| Framework | ASP.NET Core | Express.js |
-| ORM | Entity Framework | Prisma |
-| Database | SQL Server | PostgreSQL |
-| Tests | xUnit | Jest |
-| Language | C# | TypeScript |
-
-Both demonstrate Clean Architecture, have tests, use relational databases, and provide realistic workshop scenarios.
+**Repository:**
+- GitHub: https://github.com/VeryBigThings/workshop-demo-ts
