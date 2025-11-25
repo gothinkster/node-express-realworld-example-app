@@ -41,3 +41,7 @@ Thumbs.db
 
 .nx/cache
 .env
+
+# Implementation tracking (personal/session-specific)
+SPEC-VCW-*.md
+VCW-*-PROGRESS.md
