@@ -40,6 +40,13 @@ app.use(
     } else if (err && err.errorCode) {
       // @ts-ignore
       res.status(err.errorCode).json(err.message);
+      // @ts-ignore
+    }else if (err.code === 'P2002') {
+      return res.status(422).json({
+        errors: {
+          message: 'Email or username already taken'
+        }
+      });
     } else if (err) {
       res.status(500).json(err.message);
     }
