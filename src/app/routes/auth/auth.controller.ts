@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import auth from './auth';
 import { createUser, getCurrentUser, login, updateUser } from './auth.service';
+ import { validateUserRegistration, validateUserLogin } from '../../../middleware/validation';
 
 const router = Router();
 
@@ -11,7 +12,7 @@ const router = Router();
  * @bodyparam user User
  * @returns user User
  */
-router.post('/users', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/users',validateUserRegistration, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await createUser({ ...req.body.user, demo: false });
     res.status(201).json({ user });
@@ -27,7 +28,7 @@ router.post('/users', async (req: Request, res: Response, next: NextFunction) =>
  * @bodyparam user User
  * @returns user User
  */
-router.post('/users/login', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/users/login',validateUserLogin, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await login(req.body.user);
     res.json({ user });
