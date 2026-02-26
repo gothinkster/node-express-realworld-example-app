@@ -29,6 +29,7 @@ const router = Router();
  */
 router.get('/articles', auth.optional, async (req: Request, res: Response, next: NextFunction) => {
   try {
+    
     const result = await getArticles(req.query, req.auth?.user?.id);
     res.json(result);
   } catch (error) {
