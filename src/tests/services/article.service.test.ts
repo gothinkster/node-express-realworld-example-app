@@ -2,10 +2,55 @@ import prismaMock from '../prisma-mock';
 import {
   deleteComment,
   favoriteArticle,
+  getArticles,
   unfavoriteArticle,
 } from '../../app/routes/article/article.service';
 
 describe('ArticleService', () => {
+
+  describe('getArticles sorting', () => {
+    test('should use default sorting when query is empty', async () => {
+      // @ts-ignore Prisma deep mock type is too complex for ts-jest here
+      prismaMock.article.count.mockResolvedValue(0);
+      prismaMock.article.findMany.mockResolvedValue([]);
+      await getArticles({}, 1);
+
+      expect(prismaMock.article.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { createdAt: 'desc' },
+        }),
+      );
+    });
+
+    test('should fallback to default sorting for invalid sort inputs', async () => {
+      // @ts-ignore Prisma deep mock type is too complex for ts-jest here
+      prismaMock.article.count.mockResolvedValue(0);
+      prismaMock.article.findMany.mockResolvedValue([]);
+
+      await getArticles({ sort: 'notAField', order: 'wrongOrder' }, 1);
+
+      expect(prismaMock.article.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { createdAt: 'desc' },
+        }),
+      );
+    });
+
+    test('should apply valid sorting inputs', async () => {
+      // @ts-ignore Prisma deep mock type is too complex for ts-jest here
+      prismaMock.article.count.mockResolvedValue(0);
+      prismaMock.article.findMany.mockResolvedValue([]);
+
+      await getArticles({ sort: 'updatedAt', order: 'asc' }, 1);
+
+      expect(prismaMock.article.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { updatedAt: 'asc' },
+        }),
+      );
+    });
+  });
+
   describe('deleteComment', () => {
     test('should throw an error ', () => {
       // Given

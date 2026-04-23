@@ -1,6 +1,6 @@
+import prismaMock from '../prisma-mock';
 import * as bcrypt from 'bcryptjs';
 import { createUser, getCurrentUser, login, updateUser } from '../../app/routes/auth/auth.service';
-import prismaMock from '../prisma-mock';
 
 describe('AuthService', () => {
   describe('createUser', () => {

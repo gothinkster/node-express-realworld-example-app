@@ -5,6 +5,29 @@ import profileMapper from '../profile/profile.utils';
 import articleMapper from './article.mapper';
 import { Tag } from '../tag/tag.model';
 
+type SortField = 'createdAt' | 'updatedAt' | 'title';
+type SortOrder = 'asc' | 'desc';
+
+const allowedSortFields: SortField[] = ['createdAt', 'updatedAt', 'title'];
+const allowedSortOrders: SortOrder[] = ['asc', 'desc'];
+
+const buildArticleOrderBy = (query: any = {}) => {
+  const sort = typeof query?.sort === 'string' ? query.sort : 'createdAt';
+  const order = typeof query?.order === 'string' ? query.order : 'desc';
+
+  const safeSort: SortField = allowedSortFields.includes(sort as SortField)
+    ? (sort as SortField)
+    : 'createdAt';
+
+  const safeOrder: SortOrder = allowedSortOrders.includes(order as SortOrder)
+    ? (order as SortOrder)
+    : 'desc';
+
+  return {
+    [safeSort]: safeOrder,
+  };
+};
+
 const buildFindAllQuery = (query: any, id: number | undefined) => {
   const queries: any = [];
   const orAuthorQuery = [];
@@ -76,9 +99,7 @@ export const getArticles = async (query: any, id?: number) => {
 
   const articles = await prisma.article.findMany({
     where: { AND: andQueries },
-    orderBy: {
-      createdAt: 'desc',
-    },
+    orderBy: buildArticleOrderBy(query),
     skip: Number(query.offset) || 0,
     take: Number(query.limit) || 10,
     include: {

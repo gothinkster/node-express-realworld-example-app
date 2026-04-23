@@ -1,0 +1,34 @@
+name: Group 36 CI Pipeline
+
+on:
+  push:
+  pull_request:
+  
+jobs:
+  build-test-validate:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres://postgres@localhost:5432/conduit
+      JWT_SECRET: ci-secret
+      NODE_ENV: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run test with coverage
+        run: npx nx test api --coverage
+
+      - name: Build Application
+        run: npx nx build api
