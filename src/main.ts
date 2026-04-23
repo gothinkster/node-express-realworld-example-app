@@ -55,3 +55,9 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.info(`server up on port ${PORT}`);
 });
+
+app.use((req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} request to ${req.url} - Client IP: ${req.ip}`);
+  next();
+});

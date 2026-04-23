@@ -5,7 +5,10 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "build:prod": "nx build --configuration=production",
+    "build:clean": "nx reset && npm install && npm run build",
+    "test": "nx test",
+    "build:report": "npx nx graph --file=build-report.html"
   },
   "private": true,
   "prisma": {
@@ -47,6 +50,7 @@
     "eslint-config-prettier": "^9.0.0",
     "jest": "^29.4.1",
     "jest-environment-node": "^29.4.1",
+    "jest-html-reporter": "^4.4.0",
     "jest-mock-extended": "^3.0.5",
     "nx": "17.2.6",
     "prettier": "^2.6.2",
