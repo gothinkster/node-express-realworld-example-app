@@ -1,0 +1,16 @@
+FROM node:18-bullseye-slim
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+RUN npx prisma generate --schema src/prisma/schema.prisma
+RUN npx nx reset
+RUN npx nx build api
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "npx prisma migrate deploy --schema src/prisma/schema.prisma && node dist/api/main.js"]

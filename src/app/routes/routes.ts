@@ -10,4 +10,13 @@ const api = Router()
   .use(profileController)
   .use(authController);
 
-export default Router().use('/api', api);
+export default Router()
+  .get('/health', (req, res) => {
+    res.status(200).json({
+      status: 'UP',
+      team: 'Group 36',
+      uptime: process.uptime(),
+      timestamp: new Date()
+  });
+})
+.use('/api', api);

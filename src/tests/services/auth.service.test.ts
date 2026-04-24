@@ -1,8 +1,22 @@
 import * as bcrypt from 'bcryptjs';
+import { mockDeep, mockReset, DeepMockProxy } from 'jest-mock-extended';
+import { PrismaClient } from '@prisma/client';
+
+jest.mock('../../prisma/prisma-client', () => ({
+  __esModule: true,
+  default: mockDeep<PrismaClient>(),
+}));
+
+import prisma from '../../prisma/prisma-client';
 import { createUser, getCurrentUser, login, updateUser } from '../../app/routes/auth/auth.service';
-import prismaMock from '../prisma-mock';
+
+const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>;
 
 describe('AuthService', () => {
+  beforeEach(() => {
+    mockReset(prismaMock);
+  });
+
   describe('createUser', () => {
     test('should create new user ', async () => {
       // Given
@@ -25,6 +39,8 @@ describe('AuthService', () => {
       };
 
       // When
+      // @ts-ignore
+      prismaMock.user.findUnique.mockResolvedValue(undefined);
       // @ts-ignore
       prismaMock.user.create.mockResolvedValue(mockedResponse);
 
