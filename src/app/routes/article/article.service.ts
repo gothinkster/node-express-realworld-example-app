@@ -381,6 +381,13 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
 
   const updatedArticle = await prisma.$transaction(async (tx) => {
     if (newSlug && newSlug !== currentSlug) {
+      await tx.articleSlugHistory.deleteMany({
+        where: {
+          slug: newSlug,
+          articleId: articleId,
+        },
+      });
+
       await tx.articleSlugHistory.upsert({
         where: { slug: currentSlug },
         update: {},
