@@ -5,6 +5,37 @@ import profileMapper from '../profile/profile.utils';
 import articleMapper from './article.mapper';
 import { Tag } from '../tag/tag.model';
 
+const findArticleIdBySlug = async (slug: string): Promise<number | null> => {
+  const article = await prisma.article.findUnique({
+    where: { slug },
+    select: { id: true },
+  });
+
+  if (article) {
+    return article.id;
+  }
+
+  const slugHistory = await prisma.articleSlugHistory.findUnique({
+    where: { slug },
+    select: { articleId: true },
+  });
+
+  return slugHistory?.articleId || null;
+};
+
+const findArticleBySlug = async (slug: string, include: any = undefined) => {
+  const articleId = await findArticleIdBySlug(slug);
+
+  if (!articleId) {
+    return null;
+  }
+
+  return prisma.article.findUnique({
+    where: { id: articleId },
+    include,
+  });
+};
+
 const buildFindAllQuery = (query: any, id: number | undefined) => {
   const queries: any = [];
   const orAuthorQuery = [];
@@ -177,16 +208,9 @@ export const createArticle = async (article: any, id: number) => {
 
   const slug = `${slugify(title)}-${id}`;
 
-  const existingTitle = await prisma.article.findUnique({
-    where: {
-      slug,
-    },
-    select: {
-      slug: true,
-    },
-  });
+  const slugUsed = await isSlugUsed(slug);
 
-  if (existingTitle) {
+  if (slugUsed) {
     throw new HttpException(422, { errors: { title: ['must be unique'] } });
   }
 
@@ -239,29 +263,24 @@ export const createArticle = async (article: any, id: number) => {
 };
 
 export const getArticle = async (slug: string, id?: number) => {
-  const article = await prisma.article.findUnique({
-    where: {
-      slug,
+  const article = await findArticleBySlug(slug, {
+    tagList: {
+      select: {
+        name: true,
+      },
     },
-    include: {
-      tagList: {
-        select: {
-          name: true,
-        },
+    author: {
+      select: {
+        username: true,
+        bio: true,
+        image: true,
+        followedBy: true,
       },
-      author: {
-        select: {
-          username: true,
-          bio: true,
-          image: true,
-          followedBy: true,
-        },
-      },
-      favoritedBy: true,
-      _count: {
-        select: {
-          favoritedBy: true,
-        },
+    },
+    favoritedBy: true,
+    _count: {
+      select: {
+        favoritedBy: true,
       },
     },
   });
@@ -273,31 +292,54 @@ export const getArticle = async (slug: string, id?: number) => {
   return articleMapper(article, id);
 };
 
-const disconnectArticlesTags = async (slug: string) => {
-  await prisma.article.update({
-    where: {
-      slug,
-    },
-    data: {
-      tagList: {
-        set: [],
-      },
-    },
+
+
+const isSlugUsed = async (slug: string, excludeArticleId?: number): Promise<boolean> => {
+  const existingArticle = await prisma.article.findUnique({
+    where: { slug },
+    select: { id: true },
   });
+
+  if (existingArticle && existingArticle.id !== excludeArticleId) {
+    return true;
+  }
+
+  const existingSlugHistory = await prisma.articleSlugHistory.findUnique({
+    where: { slug },
+    select: { articleId: true },
+  });
+
+  if (existingSlugHistory && existingSlugHistory.articleId !== excludeArticleId) {
+    return true;
+  }
+
+  return false;
 };
 
 export const updateArticle = async (article: any, slug: string, id: number) => {
-  let newSlug = null;
+  let newSlug: string | null = null;
 
-  const existingArticle = await await prisma.article.findFirst({
+  const articleId = await findArticleIdBySlug(slug);
+
+  if (!articleId) {
+    throw new HttpException(404, {});
+  }
+
+  const existingArticle = await prisma.article.findUnique({
     where: {
-      slug,
+      id: articleId,
     },
     select: {
+      slug: true,
       author: {
         select: {
           id: true,
           username: true,
+        },
+      },
+      tagList: {
+        select: {
+          name: true,
         },
       },
     },
@@ -313,79 +355,116 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     });
   }
 
+  const currentSlug = existingArticle.slug;
+
   if (article.title) {
     newSlug = `${slugify(article.title)}-${id}`;
 
-    if (newSlug !== slug) {
-      const existingTitle = await prisma.article.findFirst({
-        where: {
-          slug: newSlug,
-        },
-        select: {
-          slug: true,
-        },
-      });
+    if (newSlug !== currentSlug) {
+      const slugUsed = await isSlugUsed(newSlug, articleId);
 
-      if (existingTitle) {
+      if (slugUsed) {
         throw new HttpException(422, { errors: { title: ['must be unique'] } });
       }
     }
   }
 
-  const tagList =
-    Array.isArray(article.tagList) && article.tagList?.length
+  const shouldUpdateTags = 'tagList' in article;
+  const tagListData = shouldUpdateTags
+    ? Array.isArray(article.tagList)
       ? article.tagList.map((tag: string) => ({
           create: { name: tag },
           where: { name: tag },
         }))
-      : [];
+      : []
+    : [];
 
-  await disconnectArticlesTags(slug);
+  const updatedArticle = await prisma.$transaction(async (tx) => {
+    if (newSlug && newSlug !== currentSlug) {
+      await tx.articleSlugHistory.upsert({
+        where: { slug: currentSlug },
+        update: {},
+        create: {
+          slug: currentSlug,
+          articleId: articleId,
+        },
+      });
+    }
 
-  const updatedArticle = await prisma.article.update({
-    where: {
-      slug,
-    },
-    data: {
+    const updateData: any = {
       ...(article.title ? { title: article.title } : {}),
       ...(article.body ? { body: article.body } : {}),
       ...(article.description ? { description: article.description } : {}),
       ...(newSlug ? { slug: newSlug } : {}),
       updatedAt: new Date(),
-      tagList: {
-        connectOrCreate: tagList,
+    };
+
+    if (shouldUpdateTags) {
+      const currentTags = existingArticle.tagList.map((tag: any) => tag.name);
+      const newTags = Array.isArray(article.tagList) ? article.tagList : [];
+
+      const tagsToRemove = currentTags.filter((tag: string) => !newTags.includes(tag));
+      const tagsToAdd = newTags.filter((tag: string) => !currentTags.includes(tag));
+
+      if (tagsToRemove.length > 0) {
+        updateData.tagList = {
+          disconnect: tagsToRemove.map((name: string) => ({ name })),
+        };
+      }
+
+      if (tagsToAdd.length > 0) {
+        updateData.tagList = {
+          ...updateData.tagList,
+          connectOrCreate: tagsToAdd.map((tag: string) => ({
+            create: { name: tag },
+            where: { name: tag },
+          })),
+        };
+      }
+    }
+
+    return tx.article.update({
+      where: {
+        id: articleId,
       },
-    },
-    include: {
-      tagList: {
-        select: {
-          name: true,
+      data: updateData,
+      include: {
+        tagList: {
+          select: {
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            username: true,
+            bio: true,
+            image: true,
+            followedBy: true,
+          },
+        },
+        favoritedBy: true,
+        _count: {
+          select: {
+            favoritedBy: true,
+          },
         },
       },
-      author: {
-        select: {
-          username: true,
-          bio: true,
-          image: true,
-          followedBy: true,
-        },
-      },
-      favoritedBy: true,
-      _count: {
-        select: {
-          favoritedBy: true,
-        },
-      },
-    },
+    });
   });
 
   return articleMapper(updatedArticle, id);
 };
 
 export const deleteArticle = async (slug: string, id: number) => {
-  const existingArticle = await await prisma.article.findFirst({
+  const articleId = await findArticleIdBySlug(slug);
+
+  if (!articleId) {
+    throw new HttpException(404, {});
+  }
+
+  const existingArticle = await prisma.article.findUnique({
     where: {
-      slug,
+      id: articleId,
     },
     select: {
       author: {
@@ -408,7 +487,7 @@ export const deleteArticle = async (slug: string, id: number) => {
   }
   await prisma.article.delete({
     where: {
-      slug,
+      id: articleId,
     },
   });
 };
@@ -430,9 +509,15 @@ export const getCommentsByArticle = async (slug: string, id?: number) => {
     });
   }
 
+  const articleId = await findArticleIdBySlug(slug);
+
+  if (!articleId) {
+    return undefined;
+  }
+
   const comments = await prisma.article.findUnique({
     where: {
-      slug,
+      id: articleId,
     },
     include: {
       comments: {
@@ -475,21 +560,18 @@ export const addComment = async (body: string, slug: string, id: number) => {
     throw new HttpException(422, { errors: { body: ["can't be blank"] } });
   }
 
-  const article = await prisma.article.findUnique({
-    where: {
-      slug,
-    },
-    select: {
-      id: true,
-    },
-  });
+  const articleId = await findArticleIdBySlug(slug);
+
+  if (!articleId) {
+    throw new HttpException(404, { errors: { article: ['not found'] } });
+  }
 
   const comment = await prisma.comment.create({
     data: {
       body,
       article: {
         connect: {
-          id: article?.id,
+          id: articleId,
         },
       },
       author: {
@@ -560,9 +642,15 @@ export const deleteComment = async (id: number, userId: number) => {
 };
 
 export const favoriteArticle = async (slugPayload: string, id: number) => {
+  const articleId = await findArticleIdBySlug(slugPayload);
+
+  if (!articleId) {
+    throw new HttpException(404, { errors: { article: ['not found'] } });
+  }
+
   const { _count, ...article } = await prisma.article.update({
     where: {
-      slug: slugPayload,
+      id: articleId,
     },
     data: {
       favoritedBy: {
@@ -606,9 +694,15 @@ export const favoriteArticle = async (slugPayload: string, id: number) => {
 };
 
 export const unfavoriteArticle = async (slugPayload: string, id: number) => {
+  const articleId = await findArticleIdBySlug(slugPayload);
+
+  if (!articleId) {
+    throw new HttpException(404, { errors: { article: ['not found'] } });
+  }
+
   const { _count, ...article } = await prisma.article.update({
     where: {
-      slug: slugPayload,
+      id: articleId,
     },
     data: {
       favoritedBy: {
