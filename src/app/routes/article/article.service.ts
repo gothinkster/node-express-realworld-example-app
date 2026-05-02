@@ -292,18 +292,7 @@ export const getArticle = async (slug: string, id?: number) => {
   return articleMapper(article, id);
 };
 
-const disconnectArticlesTags = async (articleId: number) => {
-  await prisma.article.update({
-    where: {
-      id: articleId,
-    },
-    data: {
-      tagList: {
-        set: [],
-      },
-    },
-  });
-};
+
 
 const isSlugUsed = async (slug: string, excludeArticleId?: number): Promise<boolean> => {
   const existingArticle = await prisma.article.findUnique({
@@ -348,6 +337,11 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
           username: true,
         },
       },
+      tagList: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -375,40 +369,65 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     }
   }
 
-  const tagList =
-    Array.isArray(article.tagList) && article.tagList?.length
+  const shouldUpdateTags = 'tagList' in article;
+  const tagListData = shouldUpdateTags
+    ? Array.isArray(article.tagList)
       ? article.tagList.map((tag: string) => ({
           create: { name: tag },
           where: { name: tag },
         }))
-      : [];
-
-  await disconnectArticlesTags(articleId);
+      : []
+    : [];
 
   const updatedArticle = await prisma.$transaction(async (tx) => {
     if (newSlug && newSlug !== currentSlug) {
-      await tx.articleSlugHistory.create({
-        data: {
+      await tx.articleSlugHistory.upsert({
+        where: { slug: currentSlug },
+        update: {},
+        create: {
           slug: currentSlug,
           articleId: articleId,
         },
       });
     }
 
+    const updateData: any = {
+      ...(article.title ? { title: article.title } : {}),
+      ...(article.body ? { body: article.body } : {}),
+      ...(article.description ? { description: article.description } : {}),
+      ...(newSlug ? { slug: newSlug } : {}),
+      updatedAt: new Date(),
+    };
+
+    if (shouldUpdateTags) {
+      const currentTags = existingArticle.tagList.map((tag: any) => tag.name);
+      const newTags = Array.isArray(article.tagList) ? article.tagList : [];
+
+      const tagsToRemove = currentTags.filter((tag: string) => !newTags.includes(tag));
+      const tagsToAdd = newTags.filter((tag: string) => !currentTags.includes(tag));
+
+      if (tagsToRemove.length > 0) {
+        updateData.tagList = {
+          disconnect: tagsToRemove.map((name: string) => ({ name })),
+        };
+      }
+
+      if (tagsToAdd.length > 0) {
+        updateData.tagList = {
+          ...updateData.tagList,
+          connectOrCreate: tagsToAdd.map((tag: string) => ({
+            create: { name: tag },
+            where: { name: tag },
+          })),
+        };
+      }
+    }
+
     return tx.article.update({
       where: {
         id: articleId,
       },
-      data: {
-        ...(article.title ? { title: article.title } : {}),
-        ...(article.body ? { body: article.body } : {}),
-        ...(article.description ? { description: article.description } : {}),
-        ...(newSlug ? { slug: newSlug } : {}),
-        updatedAt: new Date(),
-        tagList: {
-          connectOrCreate: tagList,
-        },
-      },
+      data: updateData,
       include: {
         tagList: {
           select: {
