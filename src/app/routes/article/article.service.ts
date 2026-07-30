@@ -190,6 +190,16 @@ export const createArticle = async (article: any, id: number) => {
     throw new HttpException(422, { errors: { title: ['must be unique'] } });
   }
 
+  // FIX: Safely find or create tags manually to bypass Prisma unique constraints
+  const processedTags = [];
+  for (const tagName of tags) {
+    let dbTag = await prisma.tag.findFirst({ where: { name: tagName } });
+    if (!dbTag) {
+      dbTag = await prisma.tag.create({ data: { name: tagName } });
+    }
+    processedTags.push({ id: dbTag.id });
+  }
+
   const {
     authorId,
     id: articleId,
@@ -201,10 +211,7 @@ export const createArticle = async (article: any, id: number) => {
       body,
       slug,
       tagList: {
-        connectOrCreate: tags.map((tag: string) => ({
-          create: { name: tag },
-          where: { name: tag },
-        })),
+        connect: processedTags, // Connect using the safely processed IDs
       },
       author: {
         connect: {
@@ -332,13 +339,17 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     }
   }
 
-  const tagList =
-    Array.isArray(article.tagList) && article.tagList?.length
-      ? article.tagList.map((tag: string) => ({
-          create: { name: tag },
-          where: { name: tag },
-        }))
-      : [];
+  // FIX: Safely find or create tags manually to bypass Prisma unique constraints
+  const processedTags = [];
+  if (Array.isArray(article.tagList) && article.tagList.length > 0) {
+    for (const tagName of article.tagList) {
+      let dbTag = await prisma.tag.findFirst({ where: { name: tagName } });
+      if (!dbTag) {
+        dbTag = await prisma.tag.create({ data: { name: tagName } });
+      }
+      processedTags.push({ id: dbTag.id });
+    }
+  }
 
   await disconnectArticlesTags(slug);
 
@@ -353,7 +364,7 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
       ...(newSlug ? { slug: newSlug } : {}),
       updatedAt: new Date(),
       tagList: {
-        connectOrCreate: tagList,
+        connect: processedTags, // Connect using the safely processed IDs
       },
     },
     include: {
