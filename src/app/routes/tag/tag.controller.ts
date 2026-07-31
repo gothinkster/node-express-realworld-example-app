@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import auth from '../auth/auth';
-import getTags from './tag.service';
+import * as tagService from './tag.service';
 
 const router = Router();
 
@@ -10,9 +10,9 @@ const router = Router();
  * @route {GET} /api/tags
  * @returns tags list of tag names
  */
-router.get('/tags', auth.optional, async (req: Request, res: Response, next: NextFunction) => {
+router.get('/', auth.optional, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tags = await getTags.getTags(req.auth?.user?.id);
+    const tags = await tagService.getTags();
     res.json({ tags });
   } catch (error) {
     next(error);
