@@ -105,7 +105,13 @@ export const getArticles = async (query: any, id?: number) => {
   });
 
   return {
-    articles: articles.map((article: any) => articleMapper(article, id)),
+    articles: articles.map((article: any) => {
+      const mapped = articleMapper(article, id);
+      return {
+        ...mapped,
+        tagList: article.tagList.map((tag: any) => tag.name),
+      };
+    }),
     articlesCount,
   };
 };
@@ -154,7 +160,13 @@ export const getFeed = async (offset: number, limit: number, id: number) => {
   });
 
   return {
-    articles: articles.map((article: any) => articleMapper(article, id)),
+    articles: articles.map((article: any) => {
+      const mapped = articleMapper(article, id);
+      return {
+        ...mapped,
+        tagList: article.tagList.map((tag: any) => tag.name),
+      };
+    }),
     articlesCount,
   };
 };
@@ -190,7 +202,6 @@ export const createArticle = async (article: any, id: number) => {
     throw new HttpException(422, { errors: { title: ['must be unique'] } });
   }
 
-  // FIX: Safely find or create tags manually to bypass Prisma unique constraints
   const processedTags = [];
   for (const tagName of tags) {
     let dbTag = await prisma.tag.findFirst({ where: { name: tagName } });
@@ -211,7 +222,7 @@ export const createArticle = async (article: any, id: number) => {
       body,
       slug,
       tagList: {
-        connect: processedTags, // Connect using the safely processed IDs
+        connect: processedTags,
       },
       author: {
         connect: {
@@ -242,7 +253,11 @@ export const createArticle = async (article: any, id: number) => {
     },
   });
 
-  return articleMapper(createdArticle, id);
+  const mapped = articleMapper(createdArticle, id);
+  return {
+    ...mapped,
+    tagList: createdArticle.tagList.map((tag: any) => tag.name),
+  };
 };
 
 export const getArticle = async (slug: string, id?: number) => {
@@ -277,7 +292,11 @@ export const getArticle = async (slug: string, id?: number) => {
     throw new HttpException(404, { errors: { article: ['not found'] } });
   }
 
-  return articleMapper(article, id);
+  const mapped = articleMapper(article, id);
+  return {
+    ...mapped,
+    tagList: article.tagList.map((tag: any) => tag.name),
+  };
 };
 
 const disconnectArticlesTags = async (slug: string) => {
@@ -339,7 +358,6 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     }
   }
 
-  // FIX: Safely find or create tags manually to bypass Prisma unique constraints
   const processedTags = [];
   if (Array.isArray(article.tagList) && article.tagList.length > 0) {
     for (const tagName of article.tagList) {
@@ -364,7 +382,7 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
       ...(newSlug ? { slug: newSlug } : {}),
       updatedAt: new Date(),
       tagList: {
-        connect: processedTags, // Connect using the safely processed IDs
+        connect: processedTags,
       },
     },
     include: {
@@ -390,7 +408,11 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     },
   });
 
-  return articleMapper(updatedArticle, id);
+  const mapped = articleMapper(updatedArticle, id);
+  return {
+    ...mapped,
+    tagList: updatedArticle.tagList.map((tag: any) => tag.name),
+  };
 };
 
 export const deleteArticle = async (slug: string, id: number) => {
@@ -458,7 +480,6 @@ export const getCommentsByArticle = async (slug: string, id?: number) => {
 
   const result = comments.comments.map((comment: any) => ({
     ...comment,
-    // FIX: Using profileMapper ensures the image fallback logic is used
     author: profileMapper(comment.author, id), 
   }));
 
@@ -510,7 +531,6 @@ export const addComment = async (body: string, slug: string, id: number) => {
     createdAt: comment.createdAt,
     updatedAt: comment.updatedAt,
     body: comment.body,
-    // FIX: Using profileMapper ensures the image fallback logic is used
     author: profileMapper(comment.author, id),
   };
 };
