@@ -7,41 +7,18 @@ import { Tag } from '../tag/tag.model';
 
 const buildFindAllQuery = (query: any, id: number | undefined) => {
   const queries: any = [];
-  const orAuthorQuery = [];
-  const andAuthorQuery = [];
 
-  orAuthorQuery.push({
-    bio: {
-      equals: query.bio,
-    },
-  });
-
-  if (id) {
-    orAuthorQuery.push({
-      id: {
-        equals: id,
+  // Only filter by author if explicitly requested
+  if (query.author) {
+    queries.push({
+      author: {
+        username: query.author,
       },
     });
   }
 
-  if ('author' in query) {
-    andAuthorQuery.push({
-      username: {
-        equals: query.author,
-      },
-    });
-  }
-
-  const authorQuery = {
-    author: {
-      OR: orAuthorQuery,
-      AND: andAuthorQuery,
-    },
-  };
-
-  queries.push(authorQuery);
-
-  if ('tag' in query) {
+  // Only filter by tag if explicitly requested
+  if (query.tag) {
     queries.push({
       tagList: {
         some: {
@@ -51,13 +28,12 @@ const buildFindAllQuery = (query: any, id: number | undefined) => {
     });
   }
 
-  if ('favorited' in query) {
+  // Only filter by favorites if explicitly requested
+  if (query.favorited) {
     queries.push({
       favoritedBy: {
         some: {
-          username: {
-            equals: query.favorited,
-          },
+          username: query.favorited,
         },
       },
     });
@@ -190,7 +166,6 @@ export const createArticle = async (article: any, id: number) => {
     throw new HttpException(422, { errors: { title: ['must be unique'] } });
   }
 
-  // FIX: Using Prisma's native connectOrCreate which respects your new Tag.name_unique constraint
   const {
     authorId,
     id: articleId,
