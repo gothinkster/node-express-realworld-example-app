@@ -1,17 +1,16 @@
 import prisma from '../../../prisma/prisma-client';
 
-export const getTags = async (id?: number): Promise<string[]> => {
+const getTags = async (): Promise<string[]> => {
   const tags = await prisma.tag.findMany({
     select: {
       name: true,
     },
-    orderBy: {
-      articles: {
-        _count: 'desc',
-      },
-    },
-    take: 10,
+    take: 20, 
   });
 
   return tags.map((tag) => tag.name);
+};
+
+export default {
+  getTags,
 };
