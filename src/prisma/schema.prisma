@@ -4,8 +4,21 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = []
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  username  String    @unique
+  password  String
+  bio       String?
+  image     String?
+  articles  Article[]
+  favorites Article[] @relation("UserFavorites")
+  followedBy User[]   @relation("UserFollows")
+  following  User[]   @relation("UserFollows")
+  comments  Comment[]
 }
 
 model Article {
@@ -15,9 +28,9 @@ model Article {
   description String
   body        String
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   tagList     Tag[]
-  author      User      @relation("UserArticles", fields: [authorId], onDelete: Cascade, references: [id])
+  author      User      @relation(fields: [authorId], references: [id])
   authorId    Int
   favoritedBy User[]    @relation("UserFavorites")
   comments    Comment[]
@@ -26,11 +39,11 @@ model Article {
 model Comment {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   body      String
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id])
   articleId Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
 }
 
@@ -38,19 +51,4 @@ model Tag {
   id       Int       @id @default(autoincrement())
   name     String    @unique
   articles Article[]
-}
-
-model User {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  username   String    @unique
-  password   String
-  image      String?   @default("https://api.realworld.io/images/smiley-cyrus.jpeg")
-  bio        String?
-  articles   Article[] @relation("UserArticles")
-  favorites  Article[] @relation("UserFavorites")
-  followedBy User[]    @relation("UserFollows")
-  following  User[]    @relation("UserFollows")
-  comments   Comment[]
-  demo       Boolean   @default(false)
 }

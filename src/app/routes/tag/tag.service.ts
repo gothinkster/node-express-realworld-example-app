@@ -1,40 +1,16 @@
 import prisma from '../../../prisma/prisma-client';
-import { Tag } from './tag.model';
 
-const getTags = async (id?: number): Promise<string[]> => {
-  const queries = [];
-  queries.push({ demo: true });
-
-  if (id) {
-    queries.push({
-      id: {
-        equals: id,
-      },
-    });
-  }
-
+const getTags = async (): Promise<string[]> => {
   const tags = await prisma.tag.findMany({
-    where: {
-      articles: {
-        some: {
-          author: {
-            OR: queries,
-          },
-        },
-      },
-    },
     select: {
       name: true,
     },
-    orderBy: {
-      articles: {
-        _count: 'desc',
-      },
-    },
-    take: 10,
+    take: 20, 
   });
 
-  return tags.map((tag: Tag) => tag.name);
+  return tags.map((tag) => tag.name);
 };
 
-export default getTags;
+export default {
+  getTags,
+};

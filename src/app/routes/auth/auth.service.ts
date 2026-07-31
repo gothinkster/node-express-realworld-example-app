@@ -4,25 +4,17 @@ import prisma from '../../../prisma/prisma-client';
 import HttpException from '../../models/http-exception.model';
 import { RegisteredUser } from './registered-user.model';
 import generateToken from './token.utils';
-import { User } from './user.model';
+import profileMapper from '../profile/profile.utils';
 
 const checkUserUniqueness = async (email: string, username: string) => {
   const existingUserByEmail = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-    },
+    where: { email },
+    select: { id: true },
   });
 
   const existingUserByUsername = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
-      id: true,
-    },
+    where: { username },
+    select: { id: true },
   });
 
   if (existingUserByEmail || existingUserByUsername) {
@@ -41,20 +33,11 @@ export const createUser = async (input: RegisterInput): Promise<RegisteredUser> 
   const password = input.password?.trim();
   const { image, bio, demo } = input;
 
-  if (!email) {
-    throw new HttpException(422, { errors: { email: ["can't be blank"] } });
-  }
-
-  if (!username) {
-    throw new HttpException(422, { errors: { username: ["can't be blank"] } });
-  }
-
-  if (!password) {
-    throw new HttpException(422, { errors: { password: ["can't be blank"] } });
+  if (!email || !username || !password) {
+    throw new HttpException(422, { errors: { field: ["can't be blank"] } });
   }
 
   await checkUserUniqueness(email, username);
-
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.create({
@@ -66,17 +49,13 @@ export const createUser = async (input: RegisterInput): Promise<RegisteredUser> 
       ...(bio ? { bio } : {}),
       ...(demo ? { demo } : {}),
     },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      bio: true,
-      image: true,
-    },
+    include: { followedBy: true },
   });
 
   return {
-    ...user,
+    id: user.id,
+    email: user.email,
+    ...profileMapper(user, user.id),
     token: generateToken(user.id),
   };
 };
@@ -85,65 +64,44 @@ export const login = async (userPayload: any) => {
   const email = userPayload.email?.trim();
   const password = userPayload.password?.trim();
 
-  if (!email) {
-    throw new HttpException(422, { errors: { email: ["can't be blank"] } });
-  }
-
-  if (!password) {
-    throw new HttpException(422, { errors: { password: ["can't be blank"] } });
+  if (!email || !password) {
+    throw new HttpException(422, { errors: { field: ["can't be blank"] } });
   }
 
   const user = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      password: true,
-      bio: true,
-      image: true,
-    },
+    where: { email },
+    include: { followedBy: true },
   });
 
   if (user) {
     const match = await bcrypt.compare(password, user.password);
-
     if (match) {
       return {
+        id: user.id,
         email: user.email,
-        username: user.username,
-        bio: user.bio,
-        image: user.image,
+        ...profileMapper(user, user.id),
         token: generateToken(user.id),
       };
     }
   }
 
   throw new HttpException(403, {
-    errors: {
-      'email or password': ['is invalid'],
-    },
+    errors: { 'email or password': ['is invalid'] },
   });
 };
 
 export const getCurrentUser = async (id: number) => {
-  const user = (await prisma.user.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      bio: true,
-      image: true,
-    },
-  })) as User;
+  const user = await prisma.user.findUnique({
+    where: { id },
+    include: { followedBy: true },
+  });
+
+  if (!user) throw new HttpException(404, { errors: { user: ['not found'] } });
 
   return {
-    ...user,
+    id: user.id,
+    email: user.email,
+    ...profileMapper(user, id),
     token: generateToken(user.id),
   };
 };
@@ -157,9 +115,7 @@ export const updateUser = async (userPayload: any, id: number) => {
   }
 
   const user = await prisma.user.update({
-    where: {
-      id: id,
-    },
+    where: { id },
     data: {
       ...(email ? { email } : {}),
       ...(username ? { username } : {}),
@@ -167,17 +123,13 @@ export const updateUser = async (userPayload: any, id: number) => {
       ...(image ? { image } : {}),
       ...(bio ? { bio } : {}),
     },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      bio: true,
-      image: true,
-    },
+    include: { followedBy: true },
   });
 
   return {
-    ...user,
+    id: user.id,
+    email: user.email,
+    ...profileMapper(user, id),
     token: generateToken(user.id),
   };
 };

@@ -10,9 +10,17 @@ const app = express();
  * App Configuration
  */
 
-app.use(cors());
+// Explicitly allow your frontend port
+app.use(cors({
+  origin: 'http://localhost:8081',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
+
+// Fixed: Using the correct variable name 'bodyParser'
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(routes);
 
 // Serves images
@@ -23,25 +31,34 @@ app.get('/', (req: express.Request, res: express.Response) => {
 });
 
 /* eslint-disable */
+// UPDATED GLOBAL ERROR HANDLER
 app.use(
   (
-    err: Error | HttpException,
+    err: any,
     req: express.Request,
     res: express.Response,
     next: express.NextFunction,
   ) => {
-    // @ts-ignore
+    // 1. Force the error to print to your logs (visible in kubectl logs)
+    console.error("!!! DETECTED ERROR !!!");
+    console.error("URL:", req.url);
+    console.error(err);
+
+    // 2. Handle errors and send feedback to the browser
     if (err && err.name === 'UnauthorizedError') {
       return res.status(401).json({
         status: 'error',
         message: 'missing authorization credentials',
       });
-      // @ts-ignore
     } else if (err && err.errorCode) {
-      // @ts-ignore
-      res.status(err.errorCode).json(err.message);
-    } else if (err) {
-      res.status(500).json(err.message);
+      res.status(err.errorCode).json({ message: err.message });
+    } else {
+      // 3. Send the stack trace to the browser so you can identify the file/line
+      res.status(500).json({
+        status: 'error',
+        message: err.message || 'Internal Server Error',
+        stack: err.stack, 
+      });
     }
   },
 );

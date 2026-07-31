@@ -7,41 +7,18 @@ import { Tag } from '../tag/tag.model';
 
 const buildFindAllQuery = (query: any, id: number | undefined) => {
   const queries: any = [];
-  const orAuthorQuery = [];
-  const andAuthorQuery = [];
 
-  orAuthorQuery.push({
-    demo: {
-      equals: true,
-    },
-  });
-
-  if (id) {
-    orAuthorQuery.push({
-      id: {
-        equals: id,
+  // Only filter by author if explicitly requested
+  if (query.author) {
+    queries.push({
+      author: {
+        username: query.author,
       },
     });
   }
 
-  if ('author' in query) {
-    andAuthorQuery.push({
-      username: {
-        equals: query.author,
-      },
-    });
-  }
-
-  const authorQuery = {
-    author: {
-      OR: orAuthorQuery,
-      AND: andAuthorQuery,
-    },
-  };
-
-  queries.push(authorQuery);
-
-  if ('tag' in query) {
+  // Only filter by tag if explicitly requested
+  if (query.tag) {
     queries.push({
       tagList: {
         some: {
@@ -51,13 +28,12 @@ const buildFindAllQuery = (query: any, id: number | undefined) => {
     });
   }
 
-  if ('favorited' in query) {
+  // Only filter by favorites if explicitly requested
+  if (query.favorited) {
     queries.push({
       favoritedBy: {
         some: {
-          username: {
-            equals: query.favorited,
-          },
+          username: query.favorited,
         },
       },
     });
@@ -202,8 +178,8 @@ export const createArticle = async (article: any, id: number) => {
       slug,
       tagList: {
         connectOrCreate: tags.map((tag: string) => ({
-          create: { name: tag },
           where: { name: tag },
+          create: { name: tag },
         })),
       },
       author: {
@@ -280,7 +256,7 @@ const disconnectArticlesTags = async (slug: string) => {
     },
     data: {
       tagList: {
-        set: [],
+        set: [], // Clears existing relationships before updating
       },
     },
   });
@@ -289,7 +265,7 @@ const disconnectArticlesTags = async (slug: string) => {
 export const updateArticle = async (article: any, slug: string, id: number) => {
   let newSlug = null;
 
-  const existingArticle = await await prisma.article.findFirst({
+  const existingArticle = await prisma.article.findFirst({
     where: {
       slug,
     },
@@ -332,13 +308,7 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     }
   }
 
-  const tagList =
-    Array.isArray(article.tagList) && article.tagList?.length
-      ? article.tagList.map((tag: string) => ({
-          create: { name: tag },
-          where: { name: tag },
-        }))
-      : [];
+  const tags = Array.isArray(article.tagList) ? article.tagList : [];
 
   await disconnectArticlesTags(slug);
 
@@ -353,7 +323,10 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
       ...(newSlug ? { slug: newSlug } : {}),
       updatedAt: new Date(),
       tagList: {
-        connectOrCreate: tagList,
+        connectOrCreate: tags.map((tag: string) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
       },
     },
     include: {
@@ -383,7 +356,7 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
 };
 
 export const deleteArticle = async (slug: string, id: number) => {
-  const existingArticle = await await prisma.article.findFirst({
+  const existingArticle = await prisma.article.findFirst({
     where: {
       slug,
     },
@@ -414,21 +387,7 @@ export const deleteArticle = async (slug: string, id: number) => {
 };
 
 export const getCommentsByArticle = async (slug: string, id?: number) => {
-  const queries = [];
-
-  queries.push({
-    author: {
-      demo: true,
-    },
-  });
-
-  if (id) {
-    queries.push({
-      author: {
-        id,
-      },
-    });
-  }
+  const commentFilter = id ? { author: { id } } : undefined;
 
   const comments = await prisma.article.findUnique({
     where: {
@@ -436,9 +395,7 @@ export const getCommentsByArticle = async (slug: string, id?: number) => {
     },
     include: {
       comments: {
-        where: {
-          OR: queries,
-        },
+        where: commentFilter,
         select: {
           id: true,
           createdAt: true,
@@ -457,14 +414,13 @@ export const getCommentsByArticle = async (slug: string, id?: number) => {
     },
   });
 
-  const result = comments?.comments.map((comment: any) => ({
+  if (!comments || !comments.comments) {
+    return [];
+  }
+
+  const result = comments.comments.map((comment: any) => ({
     ...comment,
-    author: {
-      username: comment.author.username,
-      bio: comment.author.bio,
-      image: comment.author.image,
-      following: comment.author.followedBy.some((follow: any) => follow.id === id),
-    },
+    author: profileMapper(comment.author, id), 
   }));
 
   return result;
@@ -515,12 +471,7 @@ export const addComment = async (body: string, slug: string, id: number) => {
     createdAt: comment.createdAt,
     updatedAt: comment.updatedAt,
     body: comment.body,
-    author: {
-      username: comment.author.username,
-      bio: comment.author.bio,
-      image: comment.author.image,
-      following: comment.author.followedBy.some((follow: any) => follow.id === id),
-    },
+    author: profileMapper(comment.author, id),
   };
 };
 
@@ -594,15 +545,7 @@ export const favoriteArticle = async (slugPayload: string, id: number) => {
     },
   });
 
-  const result = {
-    ...article,
-    author: profileMapper(article.author, id),
-    tagList: article?.tagList.map((tag: Tag) => tag.name),
-    favorited: article.favoritedBy.some((favorited: any) => favorited.id === id),
-    favoritesCount: _count?.favoritedBy,
-  };
-
-  return result;
+  return articleMapper(article, id);
 };
 
 export const unfavoriteArticle = async (slugPayload: string, id: number) => {
@@ -640,13 +583,5 @@ export const unfavoriteArticle = async (slugPayload: string, id: number) => {
     },
   });
 
-  const result = {
-    ...article,
-    author: profileMapper(article.author, id),
-    tagList: article?.tagList.map((tag: Tag) => tag.name),
-    favorited: article.favoritedBy.some((favorited: any) => favorited.id === id),
-    favoritesCount: _count?.favoritedBy,
-  };
-
-  return result;
+  return articleMapper(article, id);
 };
