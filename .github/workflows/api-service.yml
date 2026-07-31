@@ -28,4 +28,6 @@ jobs:
           context: .
           push: true
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/api-service:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/api-service:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/api-service:${{ github.sha }}
