@@ -1,9 +1,6 @@
 import prisma from '../../../prisma/prisma-client';
-import { Tag } from './tag.model';
 
-const getTags = async (id?: number): Promise<string[]> => {
-  // We are simplifying this to a basic fetch to ensure the API starts up correctly.
-  // This removes the relational 'author' filter which was causing the Prisma validation error.
+export const getTags = async (id?: number): Promise<string[]> => {
   const tags = await prisma.tag.findMany({
     select: {
       name: true,
@@ -18,8 +15,3 @@ const getTags = async (id?: number): Promise<string[]> => {
 
   return tags.map((tag) => tag.name);
 };
-
-export default {
-  getTags,
-};
-
