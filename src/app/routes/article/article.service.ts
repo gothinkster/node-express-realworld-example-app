@@ -105,13 +105,7 @@ export const getArticles = async (query: any, id?: number) => {
   });
 
   return {
-    articles: articles.map((article: any) => {
-      const mapped = articleMapper(article, id);
-      return {
-        ...mapped,
-        tagList: article.tagList.map((tag: any) => tag.name),
-      };
-    }),
+    articles: articles.map((article: any) => articleMapper(article, id)),
     articlesCount,
   };
 };
@@ -160,13 +154,7 @@ export const getFeed = async (offset: number, limit: number, id: number) => {
   });
 
   return {
-    articles: articles.map((article: any) => {
-      const mapped = articleMapper(article, id);
-      return {
-        ...mapped,
-        tagList: article.tagList.map((tag: any) => tag.name),
-      };
-    }),
+    articles: articles.map((article: any) => articleMapper(article, id)),
     articlesCount,
   };
 };
@@ -202,15 +190,7 @@ export const createArticle = async (article: any, id: number) => {
     throw new HttpException(422, { errors: { title: ['must be unique'] } });
   }
 
-  const processedTags = [];
-  for (const tagName of tags) {
-    let dbTag = await prisma.tag.findFirst({ where: { name: tagName } });
-    if (!dbTag) {
-      dbTag = await prisma.tag.create({ data: { name: tagName } });
-    }
-    processedTags.push({ id: dbTag.id });
-  }
-
+  // FIX: Using Prisma's native connectOrCreate which respects your new Tag.name_unique constraint
   const {
     authorId,
     id: articleId,
@@ -222,7 +202,10 @@ export const createArticle = async (article: any, id: number) => {
       body,
       slug,
       tagList: {
-        connect: processedTags,
+        connectOrCreate: tags.map((tag: string) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
       },
       author: {
         connect: {
@@ -253,11 +236,7 @@ export const createArticle = async (article: any, id: number) => {
     },
   });
 
-  const mapped = articleMapper(createdArticle, id);
-  return {
-    ...mapped,
-    tagList: createdArticle.tagList.map((tag: any) => tag.name),
-  };
+  return articleMapper(createdArticle, id);
 };
 
 export const getArticle = async (slug: string, id?: number) => {
@@ -292,11 +271,7 @@ export const getArticle = async (slug: string, id?: number) => {
     throw new HttpException(404, { errors: { article: ['not found'] } });
   }
 
-  const mapped = articleMapper(article, id);
-  return {
-    ...mapped,
-    tagList: article.tagList.map((tag: any) => tag.name),
-  };
+  return articleMapper(article, id);
 };
 
 const disconnectArticlesTags = async (slug: string) => {
@@ -306,7 +281,7 @@ const disconnectArticlesTags = async (slug: string) => {
     },
     data: {
       tagList: {
-        set: [],
+        set: [], // Clears existing relationships before updating
       },
     },
   });
@@ -358,16 +333,7 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     }
   }
 
-  const processedTags = [];
-  if (Array.isArray(article.tagList) && article.tagList.length > 0) {
-    for (const tagName of article.tagList) {
-      let dbTag = await prisma.tag.findFirst({ where: { name: tagName } });
-      if (!dbTag) {
-        dbTag = await prisma.tag.create({ data: { name: tagName } });
-      }
-      processedTags.push({ id: dbTag.id });
-    }
-  }
+  const tags = Array.isArray(article.tagList) ? article.tagList : [];
 
   await disconnectArticlesTags(slug);
 
@@ -382,7 +348,10 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
       ...(newSlug ? { slug: newSlug } : {}),
       updatedAt: new Date(),
       tagList: {
-        connect: processedTags,
+        connectOrCreate: tags.map((tag: string) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
       },
     },
     include: {
@@ -408,11 +377,7 @@ export const updateArticle = async (article: any, slug: string, id: number) => {
     },
   });
 
-  const mapped = articleMapper(updatedArticle, id);
-  return {
-    ...mapped,
-    tagList: updatedArticle.tagList.map((tag: any) => tag.name),
-  };
+  return articleMapper(updatedArticle, id);
 };
 
 export const deleteArticle = async (slug: string, id: number) => {
@@ -605,15 +570,7 @@ export const favoriteArticle = async (slugPayload: string, id: number) => {
     },
   });
 
-  const result = {
-    ...article,
-    author: profileMapper(article.author, id),
-    tagList: article?.tagList.map((tag: Tag) => tag.name),
-    favorited: article.favoritedBy.some((favorited: any) => favorited.id === id),
-    favoritesCount: _count?.favoritedBy,
-  };
-
-  return result;
+  return articleMapper(article, id);
 };
 
 export const unfavoriteArticle = async (slugPayload: string, id: number) => {
@@ -651,13 +608,5 @@ export const unfavoriteArticle = async (slugPayload: string, id: number) => {
     },
   });
 
-  const result = {
-    ...article,
-    author: profileMapper(article.author, id),
-    tagList: article?.tagList.map((tag: Tag) => tag.name),
-    favorited: article.favoritedBy.some((favorited: any) => favorited.id === id),
-    favoritesCount: _count?.favoritedBy,
-  };
-
-  return result;
+  return articleMapper(article, id);
 };
