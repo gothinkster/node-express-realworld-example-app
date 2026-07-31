@@ -29,4 +29,6 @@ jobs:
           push: true
           # Ensure your Dockerfile is in the root directory
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/identity-service:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/identity-service:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/identity-service:${{ github.sha }}
