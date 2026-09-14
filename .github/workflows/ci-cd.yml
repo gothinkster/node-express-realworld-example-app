@@ -1,0 +1,68 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  REGION: us-east4
+  REPOSITORY: web-repo
+  SERVICE: conduit-backend
+
+jobs:
+  build-test-scan-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout codes
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --runInBand
+
+      - name: Check dependencies for vulnerabilities
+        run: npm audit --audit-level=high
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker authentication
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push Docker image
+        run: |
+          VERSION=v1.0.${GITHUB_RUN_NUMBER}
+          IMAGE=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/backend:${VERSION}
+
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE }} \
+            --image "${IMAGE}" \
+            --region "${REGION}" \
+            --port 3000 \
+            --no-allow-unauthenticated \
+            --set-env-vars "DATABASE_URL=${{ secrets.DATABASE_URL }},JWT_SECRET=${{ secrets.JWT_SECRET }},NODE_ENV=production"
