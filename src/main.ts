@@ -1,57 +1,62 @@
-import express from 'express';
-import cors from 'cors';
-import * as bodyParser from 'body-parser';
-import routes from './app/routes/routes';
-import HttpException from './app/models/http-exception.model';
+import serverlessExpress from '@codegenie/serverless-express';
+import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 
-const app = express();
+const secretsManager = new SecretsManagerClient({});
+let serverlessHandler: ReturnType<typeof serverlessExpress> | undefined;
 
-/**
- * App Configuration
- */
+const getHandler = async () => {
+  if (serverlessHandler) {
+    return serverlessHandler;
+  }
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(routes);
+  const secretArn = process.env.APP_SECRET_ARN;
+  if (!secretArn) {
+    throw new Error('APP_SECRET_ARN must be configured for the Lambda runtime.');
+  }
 
-// Serves images
-app.use(express.static(__dirname + '/assets'));
+  const secretResult = await secretsManager.send(
+    new GetSecretValueCommand({ SecretId: secretArn }),
+  );
+  if (!secretResult.SecretString) {
+    throw new Error('The application database secret has no SecretString value.');
+  }
 
-app.get('/', (req: express.Request, res: express.Response) => {
-  res.json({ status: 'API is running on /api' });
-});
+  const credentials = JSON.parse(secretResult.SecretString);
+  if (
+    !credentials.username ||
+    !credentials.password ||
+    !credentials.host ||
+    !credentials.port ||
+    !credentials.dbname
+  ) {
+    throw new Error('The application database secret is missing required connection fields.');
+  }
 
-/* eslint-disable */
-app.use(
-  (
-    err: Error | HttpException,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-  ) => {
-    // @ts-ignore
-    if (err && err.name === 'UnauthorizedError') {
-      return res.status(401).json({
-        status: 'error',
-        message: 'missing authorization credentials',
-      });
-      // @ts-ignore
-    } else if (err && err.errorCode) {
-      // @ts-ignore
-      res.status(err.errorCode).json(err.message);
-    } else if (err) {
-      res.status(500).json(err.message);
-    }
-  },
-);
+  const databaseUrl = new URL(
+    `postgresql://${encodeURIComponent(credentials.username)}:${encodeURIComponent(credentials.password)}@${credentials.host}:${credentials.port}/${credentials.dbname}`,
+  );
+  databaseUrl.searchParams.set('sslmode', 'require');
+  process.env.DATABASE_URL = databaseUrl.toString();
+  process.env.DIRECT_URL = databaseUrl.toString();
 
-/**
- * Server activation
- */
+  const { default: app } = await import('./app');
+  serverlessHandler = serverlessExpress({ app });
+  return serverlessHandler;
+};
 
-const PORT = process.env.PORT || 3000;
+export const handler = async (
+  event: Parameters<ReturnType<typeof serverlessExpress>>[0],
+  context: Parameters<ReturnType<typeof serverlessExpress>>[1],
+) => {
+  const invoke = await getHandler();
+  return invoke(event, context);
+};
 
-app.listen(PORT, () => {
-  console.info(`server up on port ${PORT}`);
-});
+if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  const { default: app } = require('./app');
+  const PORT = process.env.PORT || 3000;
+
+  app.listen(PORT, () => {
+    console.info(`server up on port ${PORT}`);
+  });
+}

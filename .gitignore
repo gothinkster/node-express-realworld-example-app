@@ -35,6 +35,16 @@ testem.log
 /typings
 .env
 
+# Terraform state and local working data
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.auto.tfvars.json
+infra/main/lambda.zip
+crash.log
+
 # System Files
 .DS_Store
 Thumbs.db
