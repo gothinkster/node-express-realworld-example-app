@@ -21,7 +21,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -41,7 +41,7 @@ router.post(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -61,7 +61,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 export default router;

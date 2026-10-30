@@ -50,13 +50,13 @@ router.get(
       const result = await getFeed(
         Number(req.query.offset),
         Number(req.query.limit),
-        req.auth?.user?.id,
+        req.auth?.user?.id
       );
       res.json(result);
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -94,7 +94,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -117,7 +117,7 @@ router.put(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -136,7 +136,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -156,7 +156,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -177,7 +177,7 @@ router.post(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -197,7 +197,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -217,7 +217,7 @@ router.post(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 /**
@@ -237,7 +237,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 export default router;

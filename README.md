@@ -65,6 +65,7 @@ npx prisma db seed
 ## Deploy on a remote server
 
 Run the following command to:
+
 - install dependencies
 - apply any new migration sql scripts
 - run the server
