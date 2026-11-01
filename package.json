@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:unit": "jest -c jest.config.ts src/tests/services src/tests/utils",
+    "test:integration": "jest -c jest.config.ts --runInBand src/tests/integration",
+    "test:coverage": "jest -c jest.config.ts --runInBand --coverage --coverageReporters=text --coverageReporters=text-summary --coverageReporters=lcov"
   },
   "private": true,
   "prisma": {
@@ -42,6 +45,7 @@
     "@types/express": "~4.17.13",
     "@types/jest": "^29.4.0",
     "@types/node": "18.16.9",
+    "@types/supertest": "^7.2.1",
     "axios": "^1.21.0",
     "esbuild": "^0.19.2",
     "eslint": "^9.39.5",
@@ -53,6 +57,7 @@
     "nx": "17.2.6",
     "prettier": "^2.6.2",
     "prisma": "^4.16.1",
+    "supertest": "^7.3.1",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.2.2",

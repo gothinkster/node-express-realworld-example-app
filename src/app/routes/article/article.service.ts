@@ -5,6 +5,14 @@ import profileMapper from '../profile/profile.utils';
 import articleMapper from './article.mapper';
 import { Tag } from '../tag/tag.model';
 
+const ensureArticleExists = async (slug: string) => {
+  const article = await prisma.article.findUnique({ where: { slug }, select: { id: true } });
+  if (!article) {
+    throw new HttpException(404, { errors: { article: ['not found'] } });
+  }
+  return article;
+};
+
 const buildFindAllQuery = (query: any, id: number | undefined) => {
   const queries: any = [];
   const orAuthorQuery = [];
@@ -475,14 +483,7 @@ export const addComment = async (body: string, slug: string, id: number) => {
     throw new HttpException(422, { errors: { body: ["can't be blank"] } });
   }
 
-  const article = await prisma.article.findUnique({
-    where: {
-      slug,
-    },
-    select: {
-      id: true,
-    },
-  });
+  const article = await ensureArticleExists(slug);
 
   const comment = await prisma.comment.create({
     data: {
@@ -560,6 +561,7 @@ export const deleteComment = async (id: number, userId: number) => {
 };
 
 export const favoriteArticle = async (slugPayload: string, id: number) => {
+  await ensureArticleExists(slugPayload);
   const { _count, ...article } = await prisma.article.update({
     where: {
       slug: slugPayload,
@@ -606,6 +608,7 @@ export const favoriteArticle = async (slugPayload: string, id: number) => {
 };
 
 export const unfavoriteArticle = async (slugPayload: string, id: number) => {
+  await ensureArticleExists(slugPayload);
   const { _count, ...article } = await prisma.article.update({
     where: {
       slug: slugPayload,
