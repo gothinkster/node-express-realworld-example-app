@@ -19,41 +19,32 @@ export const getProfile = async (usernamePayload: string, id?: number) => {
   return profileMapper(profile, id);
 };
 
+const ensureProfileExists = async (usernamePayload: string) => {
+  const profile = await prisma.user.findUnique({ where: { username: usernamePayload } });
+  if (!profile) {
+    throw new HttpException(404, {});
+  }
+};
+
 export const followUser = async (usernamePayload: string, id: number) => {
+  await ensureProfileExists(usernamePayload);
+
   const profile = await prisma.user.update({
-    where: {
-      username: usernamePayload,
-    },
-    data: {
-      followedBy: {
-        connect: {
-          id,
-        },
-      },
-    },
-    include: {
-      followedBy: true,
-    },
+    where: { username: usernamePayload },
+    data: { followedBy: { connect: { id } } },
+    include: { followedBy: true },
   });
 
   return profileMapper(profile, id);
 };
 
 export const unfollowUser = async (usernamePayload: string, id: number) => {
+  await ensureProfileExists(usernamePayload);
+
   const profile = await prisma.user.update({
-    where: {
-      username: usernamePayload,
-    },
-    data: {
-      followedBy: {
-        disconnect: {
-          id,
-        },
-      },
-    },
-    include: {
-      followedBy: true,
-    },
+    where: { username: usernamePayload },
+    data: { followedBy: { disconnect: { id } } },
+    include: { followedBy: true },
   });
 
   return profileMapper(profile, id);

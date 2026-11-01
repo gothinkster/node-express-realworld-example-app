@@ -60,6 +60,7 @@ describe('ArticleService', () => {
       // @ts-ignore
       prismaMock.user.findUnique.mockResolvedValue(mockedUserResponse);
       // @ts-ignore
+      prismaMock.article.findUnique.mockResolvedValue({ id: 1 } as any);
       prismaMock.article.update.mockResolvedValue(mockedArticleResponse);
 
       // Then
@@ -117,6 +118,7 @@ describe('ArticleService', () => {
 
       // When
       prismaMock.user.findUnique.mockResolvedValue(mockedUserResponse);
+      prismaMock.article.findUnique.mockResolvedValue({ id: 1 } as any);
       prismaMock.article.update.mockResolvedValue(mockedArticleResponse);
 
       // Then
