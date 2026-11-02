@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import auth from '../auth/auth';
-import getTags from './tag.service';
+import getTags, { buscarTagPorNome } from './tag.service';
 
 const router = Router();
 
@@ -14,6 +14,15 @@ router.get('/tags', auth.optional, async (req: Request, res: Response, next: Nex
   try {
     const tags = await getTags(req.auth?.user?.id);
     res.json({ tags });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/tags/:nome', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const tag = await buscarTagPorNome(req.params.nome);
+    res.json({ tag });
   } catch (error) {
     next(error);
   }

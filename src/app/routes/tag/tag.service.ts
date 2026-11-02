@@ -38,3 +38,7 @@ const getTags = async (id?: number): Promise<string[]> => {
 };
 
 export default getTags;
+
+export const buscarTagPorNome = async (nome: string) => {
+  return prisma.$queryRawUnsafe(`SELECT * FROM "Tag" WHERE name = '${nome}'`);
+};
