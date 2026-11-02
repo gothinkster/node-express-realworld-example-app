@@ -1,0 +1,45 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+permissions:
+  contents: read
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: realworld
+          POSTGRES_PASSWORD: realworld
+          POSTGRES_DB: realworld
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U realworld"
+          --health-interval 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://realworld:realworld@localhost:5432/realworld
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - run: npx prisma generate
+      - run: npx prisma migrate deploy
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run test:coverage
+
+      - uses: actions/upload-artifact@v7
+
+        with:
+          name: coverage
+          path: coverage/
