@@ -29,6 +29,6 @@ export default tseslint.config(
   {
     plugins: { local: { rules: { 'no-hardcoded-secret': noHardcodedSecret } } },
     rules: { 'local/no-hardcoded-secret': 'error' },
-},
+  },
   prettier
 );
