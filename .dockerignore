@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+.nx
+.git
+.github
+.env
+.env.*
+e2e
+src/tests
+*.md
